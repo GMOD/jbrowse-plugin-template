@@ -45,6 +45,18 @@ writeJSON(jbrowseConfig, 'jbrowse_config.json')
 
 /* 
 ****************************
+Update example fixture
+****************************
+*/
+
+// replace default plugin name and url with project name and dist file
+const exampleFixture = require('../cypress/fixtures/hello_view.json')
+exampleFixture.plugins[0].name = projectName
+exampleFixture.plugins[0].url = `http://localhost:9000/dist/${projectName}.umd.development.js`
+writeJSON(exampleFixture, 'cypress/fixtures/hello_view.json')
+
+/* 
+****************************
 Add badge in README
 ****************************
 */
