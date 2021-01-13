@@ -49,7 +49,7 @@ Add badge in README
 */
 
 let README = readFile('README.md').split(/\r?\n/)
-README[0] = `${projectName} ![Integration](${packageJSON.repository.slice(
+README[0] = `# ${projectName} ![Integration](${packageJSON.repository.slice(
   0,
   -4,
 )}/workflows/Integration/badge.svg?branch=main)`
