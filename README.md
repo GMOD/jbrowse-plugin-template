@@ -1,4 +1,4 @@
-# jbrowse-plugin-template
+# jbrowse-plugin-template ![Integration](https://github.com/GMOD/jbrowse-plugin-template/workflows/Integration/badge.svg?branch=main)
 
 > Template to quickly start a new JBrowse plugin
 
@@ -6,6 +6,12 @@
 
 You can use this template to create a new GitHub repository or a new local
 project.
+
+### Software requirements
+
+- [git](https://git-scm.com/downloads)
+- [Node.js](https://nodejs.org/en/download/) (version 10 or greater)
+- [yarn](https://yarnpkg.com/en/docs/install) (or npm which comes with Node.js)
 
 ### Create a new GitHub repository from this template
 
@@ -36,21 +42,15 @@ $ git init
 
 Run `yarn init` (or `npm init`) and answer the prompts to fill out the
 information for your plugin
+
 - Make sure you at least enter a "name" (probably starting with
   "jbrowse-plugin-", or "@myscope/jbrowse-plugin-" if you're going to publish to
   an NPM organization)
 - Other fields may be left blank
 - leave the "entry point" as `dist/index.js`
 
-Then in the `package.json` file, make the following updates:
-- Change "name" in the "jbrowse-plugin" field to the name of your project (e.g.
-  "MyProject")
-- In the "scripts" field, replace the default name with the name of your
-  project, prefixed with "JBrowsePlugin" in the "start" and "build" entries
-- In the "module" field, replace `jbrowse-plugin-my-project` with the name of
-  your project (leave off the `@myscope` if using a scoped package name) (you
-  can double-check that the filename is correct after running the build step
-  below and comparing the filename to the file in the `dist/` folder)
+Next run `yarn setup && yarn browse-install` or (`npm run setup && npm run browse-install`). 
+This configures your project, and adds a build of JBrowse 2 that can be used to test your plugin during development.
 
 Now run `yarn` (or `rm yarn.lock && npm install` to use npm instead of yarn)
 
@@ -64,10 +64,6 @@ $ yarn build ## or `npm run build`
 
 To develop against JBrowse Web:
 
-- Update `jbrowse_config.json` with the name of your plugin (same name as was
-  used in "my-plugin" in `package.json`) and the correct url (easiest way to
-  get the url filename is to run build the project and then look for the file
-  that ends in `.umd.development.js`)
 - Start a development version of JBrowse Web (see
   [here](https://github.com/GMOD/jbrowse-components/blob/master/CONTRIBUTING.md))
 - In this project, run `yarn start` (or `npm run start`)
@@ -76,6 +72,37 @@ To develop against JBrowse Web:
   http://localhost:3000/?config=http://localhost:9000/jbrowse_config.json
 - When you make changes to your plugin, it will automatically be re-built.
   You can then refresh JBrowse Web to see the changes.
+
+### Testing
+
+To test your plugin, there are several commands available:
+
+#### `yarn browse` or `npm run browse`
+
+Launches your local JBrowse 2 build that is used for integration testing, with your
+plugin already included in the configuration. Your plugin must also be running
+(`yarn start` or `npm run start`).
+
+#### `yarn test` or `npm test`
+
+Runs the [cypress](https://www.cypress.io/) integration tests for your plugin.
+Both the plugin and `browse` must already be running.
+
+#### `yarn e2e` or `npm run e2e`
+
+Starts up the JBrowse 2 build as well as your plugin, and runs the [cypress](https://www.cypress.io/) 
+integration tests against them. Closes both resources after tests finish.
+
+#### `yarn cypress` or `npm run cypress`
+
+Launches the [cypress](https://www.cypress.io/) test runner, which can be very
+useful for writing integration tests for your plugin. Both the plugin and `browse` 
+must already be running.
+
+#### Github Action
+
+This template includes a [Github action](https://github.com/features/actions) that
+runs your integration tests when you push new changes to your repository.
 
 ### Publishing
 
@@ -96,12 +123,10 @@ A JBrowse Web config using this plugin would look like this:
     }
   ]
 }
-
 ```
 
 You can also use a specific version in unpkg, such as
 `https://unpkg.com/jbrowse-plugin-my-project@1.0.1/dist/jbrowse-plugin-my-project.umd.production.min.js`
-
 
 ### TypeScript vs. JavaScript
 
