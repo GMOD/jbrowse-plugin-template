@@ -49,7 +49,7 @@ information for your plugin
 - Other fields may be left blank
 - leave the "entry point" as `dist/index.js`
 
-Next run `yarn setup && yarn browse-install` (or `npm run setup && npm run browse-install`). 
+Next run `yarn setup` (or `npm run setup`). 
 This configures your project, and adds a build of JBrowse 2 that can be used to test your plugin during development.
 
 Now run `yarn` (or `rm yarn.lock && npm install` to use npm instead of yarn)
