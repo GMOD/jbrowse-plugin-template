@@ -37,9 +37,10 @@ Update jbrowse_config.json
 ****************************
 */
 
-// replace default plugin name with project name
+// replace default plugin name and url with project name and dist file
 const jbrowseConfig = require('../jbrowse_config.json')
 jbrowseConfig.plugins[0].name = projectName
+jbrowseConfig.plugins[0].url = `http://localhost:9000/dist/${projectName}.umd.development.js`
 writeJSON(jbrowseConfig, 'jbrowse_config.json')
 
 /* 
