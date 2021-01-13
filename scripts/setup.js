@@ -44,13 +44,12 @@ writeJSON(jbrowseConfig, 'jbrowse_config.json')
 
 /* 
 ****************************
-Update badge in README
+Add badge in README
 ****************************
 */
 
-// Replace repo path for integration badge
 let README = readFile('README.md').split(/\r?\n/)
-README[0] = `jbrowse-plugin-template ![Integration](${packageJSON.repository.slice(
+README[0] = `${projectName} ![Integration](${packageJSON.repository.slice(
   0,
   -4,
 )}/workflows/Integration/badge.svg?branch=main)`
