@@ -1,4 +1,5 @@
 const fs = require('fs')
+const path = require('path')
 
 /* 
 ****************************
@@ -65,10 +66,19 @@ writeJSON(exampleFixture, 'cypress/fixtures/hello_view.json')
 
 /* 
 ****************************
-Add badge in README
+Set up Github action
 ****************************
 */
 
+// move integration test into workflow folder
+fs.mkdirSync('.github')
+fs.mkdirSync(path.join('.github', 'workflows'))
+fs.renameSync(
+  'integration.yml',
+  path.join('.github', 'workflows', 'integration.yml'),
+)
+
+// add status badge to README
 let README = readFile('README.md').split(/\r?\n/)
 README[0] = `# ${projectName} ![Integration](${packageJSON.repository.slice(
   0,
