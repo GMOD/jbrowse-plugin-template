@@ -9,6 +9,14 @@ Update package.json
 const packageJSON = require('../package.json')
 const { name: projectName } = packageJSON
 
+// ensure that yarn init has been run
+if (projectName === undefined) {
+  console.log(
+    'Warning: no name defined in package.json. Please run "yarn init" before "yarn setup".',
+  )
+  process.exit(1)
+}
+
 // ensure setup hasn't already been run
 if (packageJSON['jbrowse-plugin'].name !== 'MyProject') {
   console.log(
