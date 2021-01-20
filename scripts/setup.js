@@ -18,14 +18,6 @@ if (projectName === undefined) {
   process.exit(1)
 }
 
-// ensure setup hasn't already been run
-if (packageJSON['jbrowse-plugin'].name !== 'MyProject') {
-  console.log(
-    'Warning: It appears that setup has already been run. Terminating to avoid overwriting information.',
-  )
-  process.exit(1)
-}
-
 // 1. Change "name" in the "jbrowse-plugin" field to the name of your project (e.g. "MyProject")
 packageJSON['jbrowse-plugin'].name = projectName
 
@@ -71,8 +63,9 @@ Set up Github action
 */
 
 // move integration test into workflow folder
-fs.mkdirSync('.github')
-fs.mkdirSync(path.join('.github', 'workflows'))
+if (fs.existsSync(path.join('.github', 'workflows'))) {
+  fs.mkdirSync(path.join('.github', 'workflows'), { recursive: true })
+}
 fs.renameSync(
   'integration.yml',
   path.join('.github', 'workflows', 'integration.yml'),
