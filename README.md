@@ -26,16 +26,6 @@ Or you can use the GitHub CLI:
 $ gh repo create jbrowse-plugin-my-project --template https://github.com/GMOD/jbrowse-plugin-template.git
 ```
 
-### Create a new local project
-
-```console
-$ git clone https://github.com/GMOD/jbrowse-plugin-template.git jbrowse-plugin-my-project
-$ cd jbrowse-plugin-my-project
-$ rm -rf .git
-$ # If you want to use Git, re-initialize it
-$ git init
-```
-
 ## Getting started
 
 ### Setup
@@ -49,10 +39,10 @@ information for your plugin
 - Other fields may be left blank
 - leave the "entry point" as `dist/index.js`
 
-Next run `yarn setup` (or `npm run setup`). 
-This configures your project, and adds a build of JBrowse 2 that can be used to test your plugin during development.
+Now run `yarn` (or `rm yarn.lock && npm install` to use npm instead of yarn) to install the necessary dependencies.
 
-Now run `yarn` (or `rm yarn.lock && npm install` to use npm instead of yarn)
+After this, run `yarn setup` (or `npm run setup`). 
+This configures your project, and adds a build of JBrowse 2 that can be used to test your plugin during development.
 
 ### Build
 
