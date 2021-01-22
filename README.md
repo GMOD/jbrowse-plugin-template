@@ -13,7 +13,7 @@ project.
 - [Node.js](https://nodejs.org/en/download/) (version 10 or greater)
 - [yarn](https://yarnpkg.com/en/docs/install) (or npm which comes with Node.js)
 
-### Create a new GitHub repository from this template
+### Create a new project from this template
 
 You can click the "Use this template" button in the repository (instructions
 [here](https://docs.github.com/en/free-pro-team@latest/github/creating-cloning-and-archiving-repositories/creating-a-repository-from-a-template)):
@@ -24,6 +24,16 @@ Or you can use the GitHub CLI:
 
 ```console
 $ gh repo create jbrowse-plugin-my-project --template https://github.com/GMOD/jbrowse-plugin-template.git
+```
+
+Or you can start a plugin locally:
+
+```console
+$ git clone https://github.com/GMOD/jbrowse-plugin-template.git jbrowse-plugin-my-project
+$ cd jbrowse-plugin-my-project
+$ rm -rf .git
+$ # If you want to use Git, re-initialize it
+$ git init
 ```
 
 ## Getting started
