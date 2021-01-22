@@ -63,7 +63,7 @@ Set up Github action
 */
 
 // move integration test into workflow folder
-if (fs.existsSync(path.join('.github', 'workflows'))) {
+if (!fs.existsSync(path.join('.github', 'workflows'))) {
   fs.mkdirSync(path.join('.github', 'workflows'), { recursive: true })
 }
 fs.renameSync(
