@@ -119,3 +119,5 @@ function parseRepoUrl(repo) {
     return undefined
   }
 }
+
+main()
