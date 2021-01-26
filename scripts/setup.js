@@ -72,13 +72,13 @@ fs.renameSync(
 )
 
 // add status badge to README
-let README = readFile('README.md').split(/\r?\n/)
-README[0] = `# ${projectName} ![Integration](${packageJSON.repository.slice(
-  0,
-  -4,
-)}/workflows/Integration/badge.svg?branch=main)`
-const stream = fs.createWriteStream('README.md')
-README.forEach(line => stream.write(`${line}\r\n`))
+const repoUrl = parseRepoUrl(packageJSON.repository)
+if (repoUrl !== undefined) {
+  let README = readFile('README.md').split(/\r?\n/)
+  README[0] = `# ${projectName} ![Integration](${repoUrl}/workflows/Integration/badge.svg?branch=main)`
+  const stream = fs.createWriteStream('README.md')
+  README.forEach(line => stream.write(`${line}\r\n`))
+}
 
 /* 
 ****************************
@@ -100,5 +100,22 @@ function readFile(path) {
   } catch (err) {
     console.error(err)
     return false
+  }
+}
+
+function parseRepoUrl(repo) {
+  let url
+  if (repo !== undefined) {
+    if (typeof repo === 'string') {
+      url = repo
+    } else if (typeof repo === 'object') {
+      url = repo.url
+    }
+  }
+
+  if (typeof url === 'string' && url.contains('github.com')) {
+    return url.replace(/\.git$/, '')
+  } else {
+    return undefined
   }
 }
