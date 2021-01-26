@@ -22,6 +22,7 @@ function main() {
   updatePackageJSON(packageJSON, projectName)
   updateJBrowseConfig(projectName)
   updateExampleFixture(projectName)
+  makeJBrowseDir()
 
   if (!alreadyRun) {
     setupGithubAction(packageJSON, projectName)
@@ -58,6 +59,13 @@ function updateExampleFixture(projectName) {
   exampleFixture.plugins[0].name = projectName
   exampleFixture.plugins[0].url = `http://localhost:9000/dist/${projectName}.umd.development.js`
   writeJSON(exampleFixture, 'cypress/fixtures/hello_view.json')
+}
+
+// create a dot directory for the jbrowse build to live in
+function makeJBrowseDir() {
+  if (!fs.existsSync('.jbrowse')) {
+    fs.mkdirSync('.jbrowse')
+  }
 }
 
 function setupGithubAction(packageJSON, projectName) {

@@ -12,7 +12,7 @@
     "src"
   ],
   "scripts": {
-    "setup": "node scripts/setup.js && mkdir .jbrowse && yarn browse-install",
+    "setup": "node scripts/setup.js && yarn browse-install",
     "start": "tsdx watch --verbose --noClean --format umd --name JBrowsePluginMyProject --onFirstSuccess \"yarn serve --cors --listen 9000 .\"",
     "build": "tsdx build --format cjs,esm,umd --name JBrowsePluginMyProject",
     "browse-install": "cd .jbrowse && rm -rf * && jbrowse create .",
