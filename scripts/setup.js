@@ -128,7 +128,7 @@ function toPascalCase(string) {
 
 function getTsdxPackageName(projectName) {
   // From TSDX utils
-  projectName
+  return projectName
     .toLowerCase()
     .replace(/(^@.*\/)|((^[^a-zA-Z]+)|[^\w.-])|([^a-zA-Z0-9]+$)/g, '')
 }
