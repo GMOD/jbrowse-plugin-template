@@ -88,7 +88,7 @@ Helpers
 
 function writeJSON(data, path) {
   try {
-    fs.writeFileSync(path, JSON.stringify(data, null, 2))
+    fs.writeFileSync(path, `${JSON.stringify(data, null, 2)}\n`)
   } catch (err) {
     console.error(err)
   }
