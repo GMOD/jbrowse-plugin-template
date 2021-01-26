@@ -21,10 +21,11 @@ function main() {
   }
 
   const pluginName = getPluginName(projectName)
+  const tsdxName = getTsdxPackageName(projectName)
 
-  updatePackageJSON(packageJSON, projectName, pluginName)
-  updateJBrowseConfig(projectName)
-  updateExampleFixture(projectName)
+  updatePackageJSON(packageJSON, tsdxName, pluginName)
+  updateJBrowseConfig(tsdxName, pluginName)
+  updateExampleFixture(tsdxName, pluginName)
   makeJBrowseDir()
 
   if (!alreadyRun) {
@@ -32,7 +33,7 @@ function main() {
   }
 }
 
-function updatePackageJSON(packageJSON, projectName, pluginName) {
+function updatePackageJSON(packageJSON, tsdxName, pluginName) {
   // 1. Change "name" in the "jbrowse-plugin" field to the name of your project (e.g. "MyProject")
   packageJSON['jbrowse-plugin'].name = pluginName
 
@@ -42,25 +43,25 @@ function updatePackageJSON(packageJSON, projectName, pluginName) {
   packageJSON.scripts.build = `tsdx build --format cjs,esm,umd --name JBrowsePlugin${pluginName}`
 
   // 3. In the "module" field, replace jbrowse-plugin-my-project with the name of your project (leave off the @myscope if using a scoped package name) (you can double-check that the filename is correct after running the build step below and comparing the filename to the file in the dist/ folder)
-  packageJSON.module = `dist/${getTsdxPackageName(projectName)}.esm.js`
+  packageJSON.module = `dist/${tsdxName}.esm.js`
 
   // this overwrites package.json
   writeJSON(packageJSON, 'package.json')
 }
 
 // replace default plugin name and url with project name and dist file
-function updateJBrowseConfig(projectName) {
+function updateJBrowseConfig(tsdxName, pluginName) {
   const jbrowseConfig = require('../jbrowse_config.json')
-  jbrowseConfig.plugins[0].name = projectName
-  jbrowseConfig.plugins[0].url = `http://localhost:9000/dist/${projectName}.umd.development.js`
+  jbrowseConfig.plugins[0].name = pluginName
+  jbrowseConfig.plugins[0].url = `http://localhost:9000/dist/${tsdxName}.umd.development.js`
   writeJSON(jbrowseConfig, 'jbrowse_config.json')
 }
 
 // replace default plugin name and url with project name and dist file
-function updateExampleFixture(projectName) {
+function updateExampleFixture(tsdxName, pluginName) {
   const exampleFixture = require('../cypress/fixtures/hello_view.json')
-  exampleFixture.plugins[0].name = projectName
-  exampleFixture.plugins[0].url = `http://localhost:9000/dist/${projectName}.umd.development.js`
+  exampleFixture.plugins[0].name = pluginName
+  exampleFixture.plugins[0].url = `http://localhost:9000/dist/${tsdxName}.umd.development.js`
   writeJSON(exampleFixture, 'cypress/fixtures/hello_view.json')
 }
 
