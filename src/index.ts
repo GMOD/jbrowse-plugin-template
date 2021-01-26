@@ -1,7 +1,7 @@
 import Plugin from '@jbrowse/core/Plugin'
 import PluginManager from '@jbrowse/core/PluginManager'
 import { isAbstractMenuManager } from '@jbrowse/core/util'
-import ReactComponent from './components/ReactComponent'
+import { ReactComponent } from './HelloView'
 
 export default class MyProjectPlugin extends Plugin {
   name = 'MyProject'
