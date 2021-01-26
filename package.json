@@ -34,7 +34,9 @@
     "trailingComma": "all"
   },
   "jest": {
-    "testPathIgnorePatterns": ["<rootDir>/cypress/"]
+    "testPathIgnorePatterns": [
+      "<rootDir>/cypress/"
+    ]
   },
   "dependencies": {},
   "peerDependencies": {
