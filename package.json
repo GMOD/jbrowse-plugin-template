@@ -33,6 +33,9 @@
     "singleQuote": true,
     "trailingComma": "all"
   },
+  "jest": {
+    "testPathIgnorePatterns": ["<rootDir>/cypress/"]
+  },
   "dependencies": {},
   "peerDependencies": {
     "@jbrowse/core": "^1.0.3"
