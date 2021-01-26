@@ -1,4 +1,5 @@
 const fs = require('fs')
+const os = require('os')
 const path = require('path')
 
 function main() {
@@ -85,8 +86,7 @@ function setupGithubAction(packageJSON, projectName) {
   if (repoUrl !== undefined) {
     let README = readFile('README.md').split(/\r?\n/)
     README[0] = `# ${projectName} ![Integration](${repoUrl}/workflows/Integration/badge.svg?branch=main)`
-    const stream = fs.createWriteStream('README.md')
-    README.forEach(line => stream.write(`${line}\r\n`))
+    fs.writeFileSync('README.md', README.join(os.EOL), 'utf8')
   }
 }
 
