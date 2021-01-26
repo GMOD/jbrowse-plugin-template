@@ -17,5 +17,7 @@ jobs:
         uses: bahmutov/npm-install@v1
       - name: Get latest JBrowse
         run: mkdir .jbrowse && yarn run jbrowse create --force .jbrowse
+      - name: Run unit tests
+        run: yarn test --passWithNoTests
       - name: Test plugin
         run: yarn run e2e
