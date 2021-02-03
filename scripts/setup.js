@@ -144,7 +144,7 @@ function parseRepoUrl(repo) {
     }
   }
 
-  if (typeof url === 'string' && url.includes('github.com')) {
+  if (typeof url === 'string')) {
     if (url.includes('github.com')) {
       return url.replace(/\.git$/, '')
     }
