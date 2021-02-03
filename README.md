@@ -94,7 +94,7 @@ Both the plugin and `browse` must already be running.
 
 #### `yarn e2e` or `npm run e2e`
 
-Starts up the JBrowse 2 build as well as your plugin, and runs the [cypress](https://www.cypress.io/) 
+Starts up the JBrowse 2 build as well as your plugin, and runs the [cypress](https://www.cypress.io/)
 integration tests against them. Closes both resources after tests finish.
 
 #### `yarn cypress` or `npm run cypress`
