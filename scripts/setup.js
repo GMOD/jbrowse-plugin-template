@@ -91,7 +91,7 @@ function setupGithubAction(packageJSON, projectName) {
   }
 }
 
-/* 
+/*
 ****************************
 Helpers
 ****************************
