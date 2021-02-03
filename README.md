@@ -100,7 +100,7 @@ integration tests against them. Closes both resources after tests finish.
 #### `yarn cypress` or `npm run cypress`
 
 Launches the [cypress](https://www.cypress.io/) test runner, which can be very
-useful for writing integration tests for your plugin. Both the plugin and `browse` 
+useful for writing integration tests for your plugin. Both the plugin and `browse`
 must already be running.
 
 #### Github Action
