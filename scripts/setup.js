@@ -86,7 +86,14 @@ function setupGithubAction(packageJSON, projectName) {
   const repoUrl = parseRepoUrl(packageJSON.repository)
   if (repoUrl !== undefined) {
     let README = readFile('README.md').split(/\r?\n/)
-    README[0] = `# ${projectName} ![Integration](${repoUrl}/workflows/Integration/badge.svg?branch=main)`
+    README.unshift(
+      `![Integration](${repoUrl}/workflows/Integration/badge.svg?branch=main)${os.EOL}`,
+    )
+    README[1] = `# ${projectName}`
+    fs.writeFileSync('README.md', README.join(os.EOL), 'utf8')
+  } else {
+    let README = readFile('README.md').split(/\r?\n/)
+    README[0] = `# ${projectName}`
     fs.writeFileSync('README.md', README.join(os.EOL), 'utf8')
   }
 }
