@@ -51,7 +51,7 @@ information for your plugin
 
 Now run `yarn` (or `rm yarn.lock && npm install` to use npm instead of yarn) to install the necessary dependencies.
 
-After this, run `yarn setup` (or `npm run setup`). 
+After this, run `yarn setup` (or `npm run setup`).
 This configures your project, and adds a build of JBrowse 2 that can be used to test your plugin during development.
 
 ### Build
