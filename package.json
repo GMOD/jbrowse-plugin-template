@@ -20,8 +20,7 @@
     "lint": "tsdx lint",
     "prepublishOnly": "yarn test",
     "postinstall": "jbrowse-plugin-postinstall",
-    "preversion": "npm run build",
-    "postversion": "git push --follow-tags"
+    "postversion": "git run build && git push --follow-tags"
   },
   "jbrowse-plugin": {
     "name": "MyProject"
