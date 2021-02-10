@@ -12,12 +12,16 @@
     "src"
   ],
   "scripts": {
+    "clean": "rimraf dist",
     "start": "tsdx watch --verbose --noClean --format umd --name JBrowsePluginMyProject --onFirstSuccess \"yarn serve --cors --listen 9000 .\"",
+    "prebuild": "npm run clean",
     "build": "tsdx build --format cjs,esm,umd --name JBrowsePluginMyProject",
     "test": "tsdx test",
     "lint": "tsdx lint",
     "prepublishOnly": "yarn test",
-    "postinstall": "jbrowse-plugin-postinstall"
+    "postinstall": "jbrowse-plugin-postinstall",
+    "preversion": "npm run build",
+    "postversion": "git push --follow-tags"
   },
   "jbrowse-plugin": {
     "name": "MyProject"
