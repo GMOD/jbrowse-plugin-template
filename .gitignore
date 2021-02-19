@@ -114,3 +114,10 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Ignore the directory with the JBrowse 2 build
+.jbrowse
+
+# Cypress specific files
+cypress/videos
+cypress/screenshots
