@@ -1,10 +1,12 @@
 import Plugin from '@jbrowse/core/Plugin'
 import PluginManager from '@jbrowse/core/PluginManager'
 import { isAbstractMenuManager } from '@jbrowse/core/util'
+import { version } from '../package.json'
 import { ReactComponent } from './HelloView'
 
 export default class MyProjectPlugin extends Plugin {
   name = 'MyProject'
+  version = version
 
   install(pluginManager: PluginManager) {
     const { jbrequire } = pluginManager
