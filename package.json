@@ -14,7 +14,7 @@
   "scripts": {
     "setup": "node scripts/setup.js && npm run browse-install",
     "clean": "rimraf dist",
-    "start": "tsdx watch --verbose --noClean --format umd --name JBrowsePluginMyProject --onFirstSuccess \"yarn serve --cors --listen 9000 .\"",
+    "start": "tsdx watch --verbose --noClean --format umd --name JBrowsePluginMyProject --onFirstSuccess \"serve --cors --listen 9000 .\"",
     "prebuild": "npm run clean",
     "build": "tsdx build --format cjs,esm,umd --name JBrowsePluginMyProject",
     "browse-install": "cd .jbrowse && rm -rf * && jbrowse create .",
@@ -24,7 +24,7 @@
     "e2e": "start-test start 9000 browse 5000 test:cy",
     "cypress": "cypress open",
     "lint": "tsdx lint",
-    "prepublishOnly": "yarn test",
+    "prepublishOnly": "npm test",
     "prepare": "npm run build",
     "postinstall": "jbrowse-plugin-postinstall",
     "postversion": "git push --follow-tags"
