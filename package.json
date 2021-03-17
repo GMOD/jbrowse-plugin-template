@@ -43,7 +43,9 @@
       "<rootDir>/cypress/"
     ]
   },
-  "dependencies": {},
+  "dependencies": {
+    "@material-ui/icons": "^4.11.2"
+  },
   "peerDependencies": {
     "@jbrowse/core": "^1.0.3"
   },

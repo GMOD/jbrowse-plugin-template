@@ -3,6 +3,7 @@ import PluginManager from '@jbrowse/core/PluginManager'
 import { isAbstractMenuManager } from '@jbrowse/core/util'
 import { version } from '../package.json'
 import { ReactComponent } from './HelloView'
+import EmojiEmotionsIcon from '@material-ui/icons/EmojiEmotions'
 
 export default class MyProjectPlugin extends Plugin {
   name = 'MyProject'
@@ -31,6 +32,7 @@ export default class MyProjectPlugin extends Plugin {
       // @ts-ignore
       pluginManager.rootModel.appendToSubMenu(['File', 'Add'], {
         label: 'Open Hello!',
+        icon: EmojiEmotionsIcon,
         // @ts-ignore
         onClick: session => {
           session.addView('HelloView', {})
