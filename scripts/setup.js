@@ -24,7 +24,7 @@ function main() {
   const tsdxName = getTsdxPackageName(projectName)
 
   updatePackageJSON(packageJSON, tsdxName, pluginName)
-  updateJBrowseConfig(tsdxName, pluginName)
+  updateSrcIndex(pluginName)
   updateExampleFixture(tsdxName, pluginName)
   makeJBrowseDir()
 
@@ -38,9 +38,9 @@ function updatePackageJSON(packageJSON, tsdxName, pluginName) {
   packageJSON['jbrowse-plugin'].name = pluginName
 
   // 2. In the "scripts" field, replace the default name with the name of your project, prefixed with "JBrowsePlugin" in the "start" and "build" entries
-  packageJSON.scripts.start = `tsdx watch --verbose --noClean --format umd --name JBrowsePlugin${pluginName} --onFirstSuccess "yarn serve --cors --listen 9000 ."`
+  packageJSON.scripts.start = `tsdx watch --verbose --noClean --format esm --name JBrowsePlugin${pluginName} --onFirstSuccess "yarn serve --cors --listen 9000 ."`
 
-  packageJSON.scripts.build = `tsdx build --format cjs,esm,umd --name JBrowsePlugin${pluginName}`
+  packageJSON.scripts.build = `tsdx build --format cjs,esm --name JBrowsePlugin${pluginName}`
 
   // 3. In the "module" field, replace jbrowse-plugin-my-project with the name of your project (leave off the @myscope if using a scoped package name) (you can double-check that the filename is correct after running the build step below and comparing the filename to the file in the dist/ folder)
   packageJSON.module = `dist/${tsdxName}.esm.js`
@@ -49,12 +49,11 @@ function updatePackageJSON(packageJSON, tsdxName, pluginName) {
   writeJSON(packageJSON, 'package.json')
 }
 
-// replace default plugin name and url with project name and dist file
-function updateJBrowseConfig(tsdxName, pluginName) {
-  const jbrowseConfig = require('../jbrowse_config.json')
-  jbrowseConfig.plugins[0].name = pluginName
-  jbrowseConfig.plugins[0].url = `http://localhost:9000/dist/${tsdxName}.umd.development.js`
-  writeJSON(jbrowseConfig, 'jbrowse_config.json')
+// replace default plugin name in example plugin class
+function updateSrcIndex(pluginName) {
+  let indexFile = fs.readFileSync('./src/index.ts', 'utf-8')
+  indexFile = indexFile.replace(/MyProject/g, pluginName)
+  fs.writeFileSync('./src/index.ts', indexFile)
 }
 
 // replace default plugin name and url with project name and dist file
