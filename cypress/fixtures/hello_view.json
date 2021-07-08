@@ -42,8 +42,7 @@
   ],
   "plugins": [
     {
-      "name": "MyProject",
-      "url": "http://localhost:9000/dist/jb2-plugin-testing.umd.development.js"
+      "url": "http://localhost:9000/dist/jbrowse-plugin-my-project.esm.js"
     }
   ],
   "defaultSession": {

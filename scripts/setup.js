@@ -1,78 +1,59 @@
 const fs = require('fs')
 const os = require('os')
 const path = require('path')
+const { safePackageName } = require('@jbrowse/development-tools')
 
 function main() {
   const packageJSON = require('../package.json')
-  const { name: projectName } = packageJSON
-
+  const rawPackageName = packageJSON.name
   // ensure that yarn init has been run
-  if (projectName === undefined) {
+  if (rawPackageName === undefined) {
     console.log(
       'Warning: no name defined in package.json. Please run "yarn init" before "yarn setup".',
     )
     process.exit(1)
   }
 
-  // guess if setup has already been run
-  let alreadyRun = false
-  if (packageJSON['jbrowse-plugin'].name !== 'MyProject') {
-    alreadyRun = true
-  }
+  const packageName = safePackageName(rawPackageName)
 
-  const pluginName = getPluginName(projectName)
-  const tsdxName = getTsdxPackageName(projectName)
+  updateSrcIndex(packageName)
+  updateJBrowseConfig(packageName)
+  updateExampleFixture(packageName)
 
-  updatePackageJSON(packageJSON, tsdxName, pluginName)
-  updateJBrowseConfig(tsdxName, pluginName)
-  updateExampleFixture(tsdxName, pluginName)
-  makeJBrowseDir()
-
-  if (!alreadyRun) {
-    setupGithubAction(packageJSON, projectName)
-  }
+  setupGithubAction(packageName, packageJSON.repository)
 }
 
-function updatePackageJSON(packageJSON, tsdxName, pluginName) {
-  // 1. Change "name" in the "jbrowse-plugin" field to the name of your project (e.g. "MyProject")
-  packageJSON['jbrowse-plugin'].name = pluginName
-
-  // 2. In the "scripts" field, replace the default name with the name of your project, prefixed with "JBrowsePlugin" in the "start" and "build" entries
-  packageJSON.scripts.start = `tsdx watch --verbose --noClean --format umd --name JBrowsePlugin${pluginName} --onFirstSuccess "yarn serve --cors --listen 9000 ."`
-
-  packageJSON.scripts.build = `tsdx build --format cjs,esm,umd --name JBrowsePlugin${pluginName}`
-
-  // 3. In the "module" field, replace jbrowse-plugin-my-project with the name of your project (leave off the @myscope if using a scoped package name) (you can double-check that the filename is correct after running the build step below and comparing the filename to the file in the dist/ folder)
-  packageJSON.module = `dist/${tsdxName}.esm.js`
-
-  // this overwrites package.json
-  writeJSON(packageJSON, 'package.json')
+// replace default plugin name in example plugin class
+function updateSrcIndex(pluginName) {
+  let pluginClassName = pluginName
+  if (pluginClassName.startsWith('jbrowse-plugin-')) {
+    pluginClassName = pluginClassName.replace(/jbrowse-plugin-/, '')
+  }
+  pluginClassName = toPascalCase(pluginClassName)
+  const indexFilePath = path.join('src', 'index.ts')
+  let indexFile = readFile(indexFilePath)
+  indexFile = indexFile.replace(/MyProject/g, pluginClassName)
+  fs.writeFileSync(indexFilePath, indexFile)
 }
 
 // replace default plugin name and url with project name and dist file
-function updateJBrowseConfig(tsdxName, pluginName) {
+function updateJBrowseConfig(packageName) {
   const jbrowseConfig = require('../jbrowse_config.json')
-  jbrowseConfig.plugins[0].name = pluginName
-  jbrowseConfig.plugins[0].url = `http://localhost:9000/dist/${tsdxName}.umd.development.js`
+  jbrowseConfig.plugins[0].url = `http://localhost:9000/dist/${packageName}.esm.js`
   writeJSON(jbrowseConfig, 'jbrowse_config.json')
 }
 
 // replace default plugin name and url with project name and dist file
-function updateExampleFixture(tsdxName, pluginName) {
+function updateExampleFixture(packageName) {
   const exampleFixture = require('../cypress/fixtures/hello_view.json')
-  exampleFixture.plugins[0].name = pluginName
-  exampleFixture.plugins[0].url = `http://localhost:9000/dist/${tsdxName}.umd.development.js`
-  writeJSON(exampleFixture, 'cypress/fixtures/hello_view.json')
+  exampleFixture.plugins[0].url = `http://localhost:9000/dist/${packageName}.esm.js`
+  writeJSON(exampleFixture, path.join('cypress', 'fixtures', 'hello_view.json'))
 }
 
-// create a dot directory for the jbrowse build to live in
-function makeJBrowseDir() {
-  if (!fs.existsSync('.jbrowse')) {
-    fs.mkdirSync('.jbrowse')
+function setupGithubAction(packageName, repository) {
+  if (fs.existsSync(path.join('.github', 'workflows', 'integration.yml'))) {
+    return
   }
-}
-
-function setupGithubAction(packageJSON, projectName) {
   // move integration test into workflow folder
   if (!fs.existsSync(path.join('.github', 'workflows'))) {
     fs.mkdirSync(path.join('.github', 'workflows'), { recursive: true })
@@ -83,17 +64,17 @@ function setupGithubAction(packageJSON, projectName) {
   )
 
   // add status badge to README
-  const repoUrl = parseRepoUrl(packageJSON.repository)
+  const repoUrl = parseRepoUrl(repository)
   if (repoUrl !== undefined) {
     let README = readFile('README.md').split(/\r?\n/)
     README.unshift(
       `![Integration](${repoUrl}/workflows/Integration/badge.svg?branch=main)${os.EOL}`,
     )
-    README[1] = `# ${projectName}`
+    README[1] = `# ${packageName}`
     fs.writeFileSync('README.md', README.join(os.EOL), 'utf8')
   } else {
     let README = readFile('README.md').split(/\r?\n/)
-    README[0] = `# ${projectName}`
+    README[0] = `# ${packageName}`
     fs.writeFileSync('README.md', README.join(os.EOL), 'utf8')
   }
 }
@@ -134,13 +115,6 @@ function toPascalCase(string) {
     .replace(new RegExp(/\w/), s => s.toUpperCase())
 }
 
-function getTsdxPackageName(projectName) {
-  // From TSDX utils
-  return projectName
-    .toLowerCase()
-    .replace(/(^@.*\/)|((^[^a-zA-Z]+)|[^\w.-])|([^a-zA-Z0-9]+$)/g, '')
-}
-
 function parseRepoUrl(repo) {
   let url
   if (repo !== undefined) {
@@ -161,25 +135,6 @@ function parseRepoUrl(repo) {
   } else {
     return undefined
   }
-}
-
-function getPluginName(projectName) {
-  let pluginName = projectName
-
-  // strip namespace
-  if (projectName.startsWith('@')) {
-    pluginName = pluginName.split('/')[1]
-  }
-
-  // strip 'jbrowse-plugin-'
-  if (pluginName.startsWith('jbrowse-plugin-')) {
-    pluginName = pluginName.replace(/jbrowse-plugin-/, '')
-  }
-
-  // convert to pascal case
-  pluginName = toPascalCase(pluginName)
-
-  return pluginName
 }
 
 main()
