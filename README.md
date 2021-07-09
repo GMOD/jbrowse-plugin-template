@@ -122,15 +122,14 @@ A JBrowse Web config using this plugin would look like this:
 {
   "plugins": [
     {
-      "name": "MyProject",
-      "url": "https://unpkg.com/jbrowse-plugin-my-project/dist/jbrowse-plugin-my-project.umd.production.min.js"
+      "url": "https://unpkg.com/jbrowse-plugin-my-project/dist/jbrowse-plugin-my-project.esm.js"
     }
   ]
 }
 ```
 
 You can also use a specific version in unpkg, such as
-`https://unpkg.com/jbrowse-plugin-my-project@1.0.1/dist/jbrowse-plugin-my-project.umd.production.min.js`
+`https://unpkg.com/jbrowse-plugin-my-project@1.0.1/dist/jbrowse-plugin-my-project.esm.js`
 
 ### TypeScript vs. JavaScript
 
