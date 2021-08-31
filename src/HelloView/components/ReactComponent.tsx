@@ -7,7 +7,7 @@ export default function ReactComponent() {
       <h1>Hello plugin developers!</h1>
       <button
         onClick={() => {
-          setPushed('Woah! You pushed the button!')
+          setPushed('Whoa! You pushed the button!')
         }}
       >
         Push the button
