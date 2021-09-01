@@ -1,38 +1,32 @@
 import Plugin from '@jbrowse/core/Plugin'
 import PluginManager from '@jbrowse/core/PluginManager'
-import { isAbstractMenuManager } from '@jbrowse/core/util'
+import ViewType from '@jbrowse/core/pluggableElementTypes/ViewType'
+import { AbstractSessionModel, isAbstractMenuManager } from '@jbrowse/core/util'
 import { version } from '../package.json'
-import { ReactComponent } from './HelloView'
+import {
+  ReactComponent as HelloViewReactComponent,
+  stateModel as helloViewStateModel,
+} from './HelloView'
 
 export default class MyProjectPlugin extends Plugin {
   name = 'MyProject'
   version = version
 
   install(pluginManager: PluginManager) {
-    const { jbrequire } = pluginManager
-    const { types } = pluginManager.lib['mobx-state-tree']
-
-    const ViewType = jbrequire('@jbrowse/core/pluggableElementTypes/ViewType')
-    const stateModel = types
-      .model({ type: types.literal('HelloView') })
-      .actions(() => ({
-        setWidth() {
-          // unused but required by your view
-        },
-      }))
-
     pluginManager.addViewType(() => {
-      return new ViewType({ name: 'HelloView', stateModel, ReactComponent })
+      return new ViewType({
+        name: 'HelloView',
+        stateModel: helloViewStateModel,
+        ReactComponent: HelloViewReactComponent,
+      })
     })
   }
 
   configure(pluginManager: PluginManager) {
     if (isAbstractMenuManager(pluginManager.rootModel)) {
-      // @ts-ignore
       pluginManager.rootModel.appendToSubMenu(['File', 'Add'], {
         label: 'Open Hello!',
-        // @ts-ignore
-        onClick: session => {
+        onClick: (session: AbstractSessionModel) => {
           session.addView('HelloView', {})
         },
       })
