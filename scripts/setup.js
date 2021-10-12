@@ -15,7 +15,7 @@ function main() {
 
   // guess if setup has already been run
   let alreadyRun = false
-  if (packageJSON['jbrowse-plugin'].name !== 'MyProject') {
+  if (packageJSON['jbrowse-plugin'].name !== 'Template') {
     alreadyRun = true
   }
 

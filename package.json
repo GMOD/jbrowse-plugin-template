@@ -1,12 +1,12 @@
 {
   "version": "0.0.1",
-  "name": "jbrowse-plugin-my-project",
+  "name": "jbrowse-plugin-template",
   "keywords": [
     "jbrowse",
     "jbrowse2"
   ],
   "main": "dist/index.js",
-  "module": "dist/jbrowse-plugin-my-project.esm.js",
+  "module": "dist/jbrowse-plugin-template.esm.js",
   "typings": "dist/index.d.ts",
   "files": [
     "dist",
@@ -15,9 +15,9 @@
   "scripts": {
     "setup": "node scripts/setup.js && npm run browse-install",
     "clean": "rimraf dist",
-    "start": "tsdx watch --verbose --noClean --format umd --name JBrowsePluginMyProject --onFirstSuccess \"serve --cors --listen 9000 .\"",
+    "start": "tsdx watch --verbose --noClean --format umd --name JBrowsePluginTemplate --onFirstSuccess \"serve --cors --listen 9000 .\"",
     "prebuild": "npm run clean",
-    "build": "tsdx build --format cjs,esm,umd --name JBrowsePluginMyProject",
+    "build": "tsdx build --format cjs,esm,umd --name JBrowsePluginTemplate",
     "browse-install": "cd .jbrowse && rm -rf * && jbrowse create .",
     "browse": "cd .jbrowse && cp ../jbrowse_config.json . && mv jbrowse_config.json config.json && npx serve .",
     "test": "tsdx test",
@@ -31,7 +31,7 @@
     "postversion": "git push --follow-tags"
   },
   "jbrowse-plugin": {
-    "name": "MyProject"
+    "name": "Template"
   },
   "prettier": {
     "semi": false,
