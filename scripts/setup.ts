@@ -1,10 +1,18 @@
-// @ts-check
-const fs = require('fs')
-const os = require('os')
-const path = require('path')
-const chalk = require('chalk')
+import fs from 'fs'
+import os from 'os'
+import path from 'path'
+import chalk from 'chalk'
+import { JSONSchemaForNPMPackageJsonFiles } from '@schemastore/package'
 
 const fsPromises = fs.promises
+
+type JSONValue =
+  | string
+  | number
+  | boolean
+  | null
+  | JSONValue[]
+  | { [key: string]: JSONValue }
 
 async function main() {
   const packageJSON = await readJSON(path.join(__dirname, '..', 'package.json'))
@@ -40,20 +48,27 @@ async function main() {
   updateReadme(rawPackageName, packageJSON.repository)
 }
 
-function updatePackageJSON(tsdxName, pluginName, packageJSON) {
+function updatePackageJSON(
+  tsdxName: string,
+  pluginName: string,
+  packageJSON: JSONSchemaForNPMPackageJsonFiles,
+) {
   // 1. Change "name" in the "jbrowse-plugin" and "config" fields to the name of your project (e.g. "MyProject")
   packageJSON['jbrowse-plugin'].name = pluginName
+  if (!packageJSON.config) {
+    packageJSON.config = {}
+  }
   packageJSON.config.jbrowse.plugin.name = pluginName
 
   // 2. In the "module" field, replace jbrowse-plugin-my-project with the name of your project (leave off the @myscope if using a scoped package name) (you can double-check that the filename is correct after running the build step below and comparing the filename to the file in the dist/ folder)
   packageJSON.module = `dist/${tsdxName}.esm.js`
 
   // this overwrites package.json
-  writeJSON(packageJSON, 'package.json')
+  writeJSON('package.json', packageJSON)
 }
 
 // replace default plugin name in example plugin class
-async function updateSrcIndex(pluginClassName) {
+async function updateSrcIndex(pluginClassName: string) {
   const indexFilePath = path.join('src', 'index.ts')
   let indexFile = await fsPromises.readFile(indexFilePath, 'utf-8')
   indexFile = indexFile.replace(/Template/g, pluginClassName)
@@ -61,26 +76,34 @@ async function updateSrcIndex(pluginClassName) {
 }
 
 // replace default plugin name and url with project name and dist file
-async function updateJBrowseConfig(tsdxName, pluginName) {
+async function updateJBrowseConfig(tsdxName: string, pluginName: string) {
   const jbrowseConfig = await readJSON(
     path.join(__dirname, '..', 'jbrowse_config.json'),
   )
   jbrowseConfig.plugins[0].name = pluginName
   jbrowseConfig.plugins[0].url = `http://localhost:9000/dist/${tsdxName}.umd.development.js`
-  writeJSON(jbrowseConfig, 'jbrowse_config.json')
+  writeJSON('jbrowse_config.json', jbrowseConfig)
 }
 
 // replace default plugin name and url with project name and dist file
-async function updateExampleFixture(tsdxName, pluginName) {
-  const exampleFixture = await readJSON(
-    path.join(__dirname, '..', 'cypress', 'fixtures', 'hello_view.json'),
+async function updateExampleFixture(tsdxName: string, pluginName: string) {
+  const fixtureLocation = path.join(
+    __dirname,
+    '..',
+    'cypress',
+    'fixtures',
+    'hello_view.json',
   )
+  const exampleFixture = await readJSON(fixtureLocation)
   exampleFixture.plugins[0].name = pluginName
   exampleFixture.plugins[0].url = `http://localhost:9000/dist/${tsdxName}.umd.development.js`
-  writeJSON(exampleFixture, path.join('cypress', 'fixtures', 'hello_view.json'))
+  writeJSON(fixtureLocation, exampleFixture)
 }
 
-async function updateReadme(packageName, repository) {
+async function updateReadme(
+  packageName: string,
+  repository: JSONSchemaForNPMPackageJsonFiles['repository'],
+) {
   // add status badge to README
   const repoUrl = getUrlFromRepo(repository)
   let readmeLines = (await fsPromises.readFile('README.md', 'utf-8')).split(
@@ -104,7 +127,7 @@ Helpers
 ****************************
 */
 
-async function writeJSON(data, path) {
+async function writeJSON(path: string, data: JSONValue) {
   let jsonString
   try {
     jsonString = JSON.stringify(data, null, 2)
@@ -115,7 +138,7 @@ async function writeJSON(data, path) {
   return fsPromises.writeFile(path, `${jsonString}\n`)
 }
 
-async function readJSON(path) {
+async function readJSON(path: string) {
   let jsonString
   try {
     jsonString = await fsPromises.readFile(path, 'utf8')
@@ -136,7 +159,7 @@ async function readJSON(path) {
 }
 
 // snagged from https://stackoverflow.com/a/53952925
-function toPascalCase(string) {
+function toPascalCase(string: string) {
   return `${string}`
     .replace(new RegExp(/[-_]+/, 'g'), ' ')
     .replace(new RegExp(/[^\w\s]/, 'g'), '')
@@ -148,13 +171,13 @@ function toPascalCase(string) {
     .replace(new RegExp(/\w/), s => s.toUpperCase())
 }
 
-function getTsdxPackageName(name) {
+function getTsdxPackageName(name: string) {
   return name
     .toLowerCase()
     .replace(/(^@.*\/)|((^[^a-zA-Z]+)|[^\w.-])|([^a-zA-Z0-9]+$)/g, '')
 }
 
-function getUrlFromRepo(repo) {
+function getUrlFromRepo(repo: JSONSchemaForNPMPackageJsonFiles['repository']) {
   if (repo === undefined) {
     return repo
   }

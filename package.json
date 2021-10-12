@@ -24,7 +24,7 @@
     }
   },
   "scripts": {
-    "setup": "node scripts/setup.js && npm run browse-install",
+    "setup": "ts-node scripts/setup.ts && npm run browse-install",
     "clean": "rimraf dist",
     "start": "cross-var tsdx watch --verbose --noClean --format umd --name JBrowsePlugin$npm_package_config_jbrowse_plugin_name --onFirstSuccess \"cross-var serve --cors --listen $npm_package_config_port .\"",
     "prebuild": "npm run clean",
@@ -65,6 +65,7 @@
     "@jbrowse/development-tools": "^1.0.3",
     "@material-ui/core": "^4.9.13",
     "@material-ui/lab": "^4.0.0-alpha.45",
+    "@schemastore/package": "^0.0.6",
     "@types/react": "^17.0.0",
     "chalk": "^4.1.2",
     "cross-var": "^1.1.0",
@@ -77,6 +78,7 @@
     "rxjs": "^6.0.0",
     "serve": "^11.3.2",
     "start-server-and-test": "^1.11.7",
+    "ts-node": "^10.3.0",
     "tslib": "^2.0.3",
     "typescript": "^4.1.3"
   },
