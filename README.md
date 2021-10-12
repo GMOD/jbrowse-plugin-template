@@ -92,7 +92,7 @@ Runs any unit tests defined during plugin development.
 Runs the [cypress](https://www.cypress.io/) integration tests for your plugin.
 Both the plugin and `browse` must already be running.
 
-#### `yarn e2e` or `npm run e2e`
+#### `yarn test:e2e` or `npm run test:e2e`
 
 Starts up the JBrowse 2 build as well as your plugin, and runs the [cypress](https://www.cypress.io/)
 integration tests against them. Closes both resources after tests finish.
