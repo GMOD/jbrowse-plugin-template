@@ -12,18 +12,29 @@
     "dist",
     "src"
   ],
+  "config": {
+    "port": 9000,
+    "browse": {
+      "port": 8999
+    },
+    "jbrowse": {
+      "plugin": {
+        "name": "Template"
+      }
+    }
+  },
   "scripts": {
     "setup": "node scripts/setup.js && npm run browse-install",
     "clean": "rimraf dist",
-    "start": "tsdx watch --verbose --noClean --format umd --name JBrowsePluginTemplate --onFirstSuccess \"serve --cors --listen 9000 .\"",
+    "start": "cross-var tsdx watch --verbose --noClean --format umd --name JBrowsePlugin$npm_package_config_jbrowse_plugin_name --onFirstSuccess \"cross-var serve --cors --listen $npm_package_config_port .\"",
     "prebuild": "npm run clean",
-    "build": "tsdx build --format cjs,esm,umd --name JBrowsePluginTemplate",
+    "build": "cross-var tsdx build --format cjs,esm,umd --name JBrowsePlugin$npm_package_config_jbrowse_plugin_name",
     "browse-install": "cd .jbrowse && rm -rf * && jbrowse create .",
     "browse": "cd .jbrowse && cp ../jbrowse_config.json . && mv jbrowse_config.json config.json && npx serve .",
     "test": "tsdx test",
-    "test:cy": "cypress run --headless --browser chrome",
-    "e2e": "start-test start 9000 browse 5000 test:cy",
-    "cypress": "cypress open",
+    "test:cy": "cross-var cypress run --headless --browser chrome --config baseUrl=http://localhost:$npm_package_config_browse_port",
+    "e2e": "cross-var start-test start $npm_package_config_port browse $npm_package_config_browse_port test:cy",
+    "cypress:open": "cross-var cypress open --config baseUrl=http://localhost:$npm_package_config_browse_port",
     "lint": "tsdx lint",
     "prepublishOnly": "npm test",
     "prepare": "npm run build",
@@ -55,6 +66,7 @@
     "@material-ui/core": "^4.9.13",
     "@material-ui/lab": "^4.0.0-alpha.45",
     "@types/react": "^17.0.0",
+    "cross-var": "^1.1.0",
     "cypress": "^6.2.1",
     "mobx": "^5.0.0",
     "mobx-react": "^6.0.0",

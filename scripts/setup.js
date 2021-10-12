@@ -33,15 +33,11 @@ function main() {
 }
 
 function updatePackageJSON(packageJSON, tsdxName, pluginName) {
-  // 1. Change "name" in the "jbrowse-plugin" field to the name of your project (e.g. "MyProject")
+  // 1. Change "name" in the "jbrowse-plugin" and "config" fields to the name of your project (e.g. "MyProject")
   packageJSON['jbrowse-plugin'].name = pluginName
+  packageJSON.config.jbrowse.plugin.name = pluginName
 
-  // 2. In the "scripts" field, replace the default name with the name of your project, prefixed with "JBrowsePlugin" in the "start" and "build" entries
-  packageJSON.scripts.start = `tsdx watch --verbose --noClean --format umd --name JBrowsePlugin${pluginName} --onFirstSuccess "yarn serve --cors --listen 9000 ."`
-
-  packageJSON.scripts.build = `tsdx build --format cjs,esm,umd --name JBrowsePlugin${pluginName}`
-
-  // 3. In the "module" field, replace jbrowse-plugin-my-project with the name of your project (leave off the @myscope if using a scoped package name) (you can double-check that the filename is correct after running the build step below and comparing the filename to the file in the dist/ folder)
+  // 2. In the "module" field, replace jbrowse-plugin-my-project with the name of your project (leave off the @myscope if using a scoped package name) (you can double-check that the filename is correct after running the build step below and comparing the filename to the file in the dist/ folder)
   packageJSON.module = `dist/${tsdxName}.esm.js`
 
   // this overwrites package.json
