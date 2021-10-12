@@ -1,6 +1,5 @@
 const fs = require('fs')
 const os = require('os')
-const path = require('path')
 
 function main() {
   const packageJSON = require('../package.json')
@@ -73,15 +72,6 @@ function makeJBrowseDir() {
 }
 
 function setupGithubAction(packageJSON, projectName) {
-  // move integration test into workflow folder
-  if (!fs.existsSync(path.join('.github', 'workflows'))) {
-    fs.mkdirSync(path.join('.github', 'workflows'), { recursive: true })
-  }
-  fs.renameSync(
-    'integration.yml',
-    path.join('.github', 'workflows', 'integration.yml'),
-  )
-
   // add status badge to README
   const repoUrl = parseRepoUrl(packageJSON.repository)
   if (repoUrl !== undefined) {
