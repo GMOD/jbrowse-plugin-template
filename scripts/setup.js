@@ -1,38 +1,46 @@
+// @ts-check
 const fs = require('fs')
 const os = require('os')
+const path = require('path')
+const chalk = require('chalk')
 
-function main() {
-  const packageJSON = require('../package.json')
-  const { name: projectName } = packageJSON
+const fsPromises = fs.promises
 
+async function main() {
+  const packageJSON = await readJSON(path.join(__dirname, '..', 'package.json'))
+  const rawPackageName = packageJSON.name
   // ensure that yarn init has been run
-  if (projectName === undefined) {
-    console.log(
-      'Warning: no name defined in package.json. Please run "yarn init" before "yarn setup".',
+  if (rawPackageName === undefined) {
+    console.warn(
+      chalk.red(
+        'No name defined in package.json. Please run "yarn init" (or "npm init") before running "yarn setup" (or "npm run setup").',
+      ),
+    )
+    process.exit(1)
+  }
+  if (rawPackageName === 'jbrowse-plugin-template') {
+    console.warn(
+      chalk.red(
+        'Please run "yarn init" (or "npm init") before running "yarn setup" (or "npm run setup").',
+      ),
     )
     process.exit(1)
   }
 
-  // guess if setup has already been run
-  let alreadyRun = false
-  if (packageJSON['jbrowse-plugin'].name !== 'Template') {
-    alreadyRun = true
-  }
+  const tsdxName = getTsdxPackageName(rawPackageName)
+  const prefix = 'jbrowse-plugin-'
+  const pluginClassName = toPascalCase(
+    tsdxName.startsWith(prefix) ? tsdxName.slice(prefix.length) : tsdxName,
+  )
 
-  const pluginName = getPluginName(projectName)
-  const tsdxName = getTsdxPackageName(projectName)
-
-  updatePackageJSON(packageJSON, tsdxName, pluginName)
-  updateJBrowseConfig(tsdxName, pluginName)
-  updateExampleFixture(tsdxName, pluginName)
-  makeJBrowseDir()
-
-  if (!alreadyRun) {
-    setupGithubAction(packageJSON, projectName)
-  }
+  updatePackageJSON(tsdxName, pluginClassName, packageJSON)
+  updateSrcIndex(pluginClassName)
+  updateJBrowseConfig(tsdxName, pluginClassName)
+  updateExampleFixture(tsdxName, pluginClassName)
+  updateReadme(rawPackageName, packageJSON.repository)
 }
 
-function updatePackageJSON(packageJSON, tsdxName, pluginName) {
+function updatePackageJSON(tsdxName, pluginName, packageJSON) {
   // 1. Change "name" in the "jbrowse-plugin" and "config" fields to the name of your project (e.g. "MyProject")
   packageJSON['jbrowse-plugin'].name = pluginName
   packageJSON.config.jbrowse.plugin.name = pluginName
@@ -44,44 +52,50 @@ function updatePackageJSON(packageJSON, tsdxName, pluginName) {
   writeJSON(packageJSON, 'package.json')
 }
 
+// replace default plugin name in example plugin class
+async function updateSrcIndex(pluginClassName) {
+  const indexFilePath = path.join('src', 'index.ts')
+  let indexFile = await fsPromises.readFile(indexFilePath, 'utf-8')
+  indexFile = indexFile.replace(/Template/g, pluginClassName)
+  fsPromises.writeFile(indexFilePath, indexFile)
+}
+
 // replace default plugin name and url with project name and dist file
-function updateJBrowseConfig(tsdxName, pluginName) {
-  const jbrowseConfig = require('../jbrowse_config.json')
+async function updateJBrowseConfig(tsdxName, pluginName) {
+  const jbrowseConfig = await readJSON(
+    path.join(__dirname, '..', 'jbrowse_config.json'),
+  )
   jbrowseConfig.plugins[0].name = pluginName
   jbrowseConfig.plugins[0].url = `http://localhost:9000/dist/${tsdxName}.umd.development.js`
   writeJSON(jbrowseConfig, 'jbrowse_config.json')
 }
 
 // replace default plugin name and url with project name and dist file
-function updateExampleFixture(tsdxName, pluginName) {
-  const exampleFixture = require('../cypress/fixtures/hello_view.json')
+async function updateExampleFixture(tsdxName, pluginName) {
+  const exampleFixture = await readJSON(
+    path.join(__dirname, '..', 'cypress', 'fixtures', 'hello_view.json'),
+  )
   exampleFixture.plugins[0].name = pluginName
   exampleFixture.plugins[0].url = `http://localhost:9000/dist/${tsdxName}.umd.development.js`
-  writeJSON(exampleFixture, 'cypress/fixtures/hello_view.json')
+  writeJSON(exampleFixture, path.join('cypress', 'fixtures', 'hello_view.json'))
 }
 
-// create a dot directory for the jbrowse build to live in
-function makeJBrowseDir() {
-  if (!fs.existsSync('.jbrowse')) {
-    fs.mkdirSync('.jbrowse')
-  }
-}
-
-function setupGithubAction(packageJSON, projectName) {
+async function updateReadme(packageName, repository) {
   // add status badge to README
-  const repoUrl = parseRepoUrl(packageJSON.repository)
+  const repoUrl = getUrlFromRepo(repository)
+  let readmeLines = (await fsPromises.readFile('README.md', 'utf-8')).split(
+    /\r?\n/,
+  )
+  if (readmeLines[0].startsWith(`# ${packageName}`)) {
+    return
+  }
+  readmeLines[0] = `# ${packageName}`
   if (repoUrl !== undefined) {
-    let README = readFile('README.md').split(/\r?\n/)
-    README.unshift(
+    readmeLines.unshift(
       `![Integration](${repoUrl}/workflows/Integration/badge.svg?branch=main)${os.EOL}`,
     )
-    README[1] = `# ${projectName}`
-    fs.writeFileSync('README.md', README.join(os.EOL), 'utf8')
-  } else {
-    let README = readFile('README.md').split(/\r?\n/)
-    README[0] = `# ${projectName}`
-    fs.writeFileSync('README.md', README.join(os.EOL), 'utf8')
   }
+  fsPromises.writeFile('README.md', readmeLines.join(os.EOL), 'utf8')
 }
 
 /*
@@ -90,21 +104,35 @@ Helpers
 ****************************
 */
 
-function writeJSON(data, path) {
+async function writeJSON(data, path) {
+  let jsonString
   try {
-    fs.writeFileSync(path, `${JSON.stringify(data, null, 2)}\n`)
-  } catch (err) {
-    console.error(err)
+    jsonString = JSON.stringify(data, null, 2)
+  } catch (error) {
+    console.error('There was a problem converting an object to JSON')
+    throw error
   }
+  return fsPromises.writeFile(path, `${jsonString}\n`)
 }
 
-function readFile(path) {
+async function readJSON(path) {
+  let jsonString
   try {
-    return fs.readFileSync(path, 'utf8')
-  } catch (err) {
-    console.error(err)
-    return false
+    jsonString = await fsPromises.readFile(path, 'utf8')
+  } catch (error) {
+    console.error(`Could not read JSON file at ${path}`)
+    throw error
   }
+  let jsonData
+  try {
+    jsonData = JSON.parse(jsonString)
+  } catch (error) {
+    console.error(
+      `Could not parse JSON file at ${path}, check for JSON syntax errors`,
+    )
+    throw error
+  }
+  return jsonData
 }
 
 // snagged from https://stackoverflow.com/a/53952925
@@ -120,21 +148,21 @@ function toPascalCase(string) {
     .replace(new RegExp(/\w/), s => s.toUpperCase())
 }
 
-function getTsdxPackageName(projectName) {
-  // From TSDX utils
-  return projectName
+function getTsdxPackageName(name) {
+  return name
     .toLowerCase()
     .replace(/(^@.*\/)|((^[^a-zA-Z]+)|[^\w.-])|([^a-zA-Z0-9]+$)/g, '')
 }
 
-function parseRepoUrl(repo) {
-  let url
-  if (repo !== undefined) {
-    if (typeof repo === 'string') {
-      url = repo
-    } else if (typeof repo === 'object') {
-      url = repo.url
-    }
+function getUrlFromRepo(repo) {
+  if (repo === undefined) {
+    return repo
+  }
+  let url = undefined
+  if (typeof repo === 'string') {
+    url = repo
+  } else if (typeof repo === 'object') {
+    url = repo.url
   }
 
   if (typeof url === 'string') {
@@ -144,28 +172,8 @@ function parseRepoUrl(repo) {
     if (url.startsWith('github:')) {
       return `https://github.com/${url.split(':')[1]}`
     }
-  } else {
-    return undefined
   }
-}
-
-function getPluginName(projectName) {
-  let pluginName = projectName
-
-  // strip namespace
-  if (projectName.startsWith('@')) {
-    pluginName = pluginName.split('/')[1]
-  }
-
-  // strip 'jbrowse-plugin-'
-  if (pluginName.startsWith('jbrowse-plugin-')) {
-    pluginName = pluginName.replace(/jbrowse-plugin-/, '')
-  }
-
-  // convert to pascal case
-  pluginName = toPascalCase(pluginName)
-
-  return pluginName
+  return undefined
 }
 
 main()
