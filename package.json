@@ -61,13 +61,13 @@
   },
   "dependencies": {},
   "peerDependencies": {
-    "@jbrowse/core": "^1.0.4"
+    "@jbrowse/core": "^1.5.0"
   },
   "devDependencies": {
     "@babel/preset-react": "^7.10.4",
-    "@jbrowse/cli": "^1.0.3",
-    "@jbrowse/core": "^1.0.4",
-    "@jbrowse/development-tools": "^1.0.3",
+    "@jbrowse/cli": "^1.5.0",
+    "@jbrowse/core": "^1.5.0",
+    "@jbrowse/development-tools": "^1.5.0",
     "@material-ui/core": "^4.9.13",
     "@material-ui/lab": "^4.0.0-alpha.45",
     "@schemastore/package": "^0.0.6",
