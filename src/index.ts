@@ -9,7 +9,7 @@ import {
 } from './HelloView'
 
 export default class TemplatePlugin extends Plugin {
-  name = 'Template'
+  name = 'TemplatePlugin'
   version = version
 
   install(pluginManager: PluginManager) {
@@ -24,8 +24,8 @@ export default class TemplatePlugin extends Plugin {
 
   configure(pluginManager: PluginManager) {
     if (isAbstractMenuManager(pluginManager.rootModel)) {
-      pluginManager.rootModel.appendToSubMenu(['File', 'Add'], {
-        label: 'Open Hello!',
+      pluginManager.rootModel.appendToMenu('Add', {
+        label: 'Hello View',
         onClick: (session: AbstractSessionModel) => {
           session.addView('HelloView', {})
         },
