@@ -1,37 +1,53 @@
 {
   "version": "0.0.1",
-  "name": "jbrowse-plugin-my-project",
+  "name": "jbrowse-plugin-template",
   "keywords": [
     "jbrowse",
     "jbrowse2"
   ],
   "main": "dist/index.js",
-  "module": "dist/jbrowse-plugin-my-project.esm.js",
+  "module": "dist/jbrowse-plugin-template.esm.js",
   "typings": "dist/index.d.ts",
   "files": [
     "dist",
     "src"
   ],
+  "config": {
+    "port": 9000,
+    "browse": {
+      "port": 8999
+    },
+    "jbrowse": {
+      "plugin": {
+        "name": "Template"
+      }
+    }
+  },
   "scripts": {
-    "setup": "node scripts/setup.js && npm run browse-install",
+    "setup": "npm-run-all setup:*",
+    "setup:file": "ts-node scripts/setup.ts",
+    "setup:jbrowse": "npm-run-all setup:jbrowse:*",
+    "setup:jbrowse:clean": "rimraf .jbrowse",
+    "setup:jbrowse:create": "jbrowse create .jbrowse",
     "clean": "rimraf dist",
-    "start": "tsdx watch --verbose --noClean --format umd --name JBrowsePluginMyProject --onFirstSuccess \"serve --cors --listen 9000 .\"",
+    "start": "cross-var tsdx watch --verbose --noClean --format umd --name JBrowsePlugin$npm_package_config_jbrowse_plugin_name --onFirstSuccess \"cross-var serve --cors --listen $npm_package_config_port .\"",
     "prebuild": "npm run clean",
-    "build": "tsdx build --format cjs,esm,umd --name JBrowsePluginMyProject",
-    "browse-install": "cd .jbrowse && rm -rf * && jbrowse create .",
-    "browse": "cd .jbrowse && cp ../jbrowse_config.json . && mv jbrowse_config.json config.json && npx serve .",
+    "build": "cross-var tsdx build --format cjs,esm,umd --name JBrowsePlugin$npm_package_config_jbrowse_plugin_name",
+    "browse": "npm-run-all jbrowse:*",
+    "jbrowse:configure": "shx cp jbrowse_config.json .jbrowse/config.json",
+    "jbrowse:serve": "cross-var serve --listen $npm_package_config_browse_port .jbrowse",
     "test": "tsdx test",
-    "test:cy": "cypress run --headless --browser chrome",
-    "e2e": "start-test start 9000 browse 5000 test:cy",
-    "cypress": "cypress open",
+    "test:e2e": "cross-var start-test \"npm-run-all --parallel start browse\" \"$npm_package_config_port|$npm_package_config_browse_port\" \"npm-run-all cypress:run\"",
+    "cypress:run": "cross-var cypress run --headless --browser chrome --config baseUrl=http://localhost:$npm_package_config_browse_port",
+    "cypress:open": "cross-var cypress open --config baseUrl=http://localhost:$npm_package_config_browse_port",
     "lint": "tsdx lint",
-    "prepublishOnly": "npm test",
-    "prepare": "npm run build",
+    "prepublishOnly": "npm-run-all test",
+    "prepare": "npm-run-all build",
     "postinstall": "jbrowse-plugin-postinstall",
     "postversion": "git push --follow-tags"
   },
   "jbrowse-plugin": {
-    "name": "MyProject"
+    "name": "Template"
   },
   "prettier": {
     "semi": false,
@@ -45,25 +61,31 @@
   },
   "dependencies": {},
   "peerDependencies": {
-    "@jbrowse/core": "^1.0.4"
+    "@jbrowse/core": "^1.5.0"
   },
   "devDependencies": {
     "@babel/preset-react": "^7.10.4",
-    "@jbrowse/cli": "^1.0.3",
-    "@jbrowse/core": "^1.0.4",
-    "@jbrowse/development-tools": "^1.0.3",
+    "@jbrowse/cli": "^1.5.0",
+    "@jbrowse/core": "^1.5.0",
+    "@jbrowse/development-tools": "^1.5.0",
     "@material-ui/core": "^4.9.13",
     "@material-ui/lab": "^4.0.0-alpha.45",
+    "@schemastore/package": "^0.0.6",
     "@types/react": "^17.0.0",
+    "chalk": "^4.1.2",
+    "cross-var": "^1.1.0",
     "cypress": "^6.2.1",
     "mobx": "^5.0.0",
     "mobx-react": "^6.0.0",
     "mobx-state-tree": "3.14.1",
+    "npm-run-all": "^4.1.5",
     "react": "^16.8.0",
     "rimraf": "^3.0.2",
     "rxjs": "^6.0.0",
     "serve": "^11.3.2",
+    "shx": "^0.3.3",
     "start-server-and-test": "^1.11.7",
+    "ts-node": "^10.3.0",
     "tslib": "^2.0.3",
     "typescript": "^4.1.3"
   },
