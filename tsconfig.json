@@ -29,6 +29,8 @@
     // error out if import and file system have a casing mismatch. Recommended by TS
     "forceConsistentCasingInFileNames": true,
     // `rollup` ignores this option, but it is commonly used when type-checking separately with `tsc`
+    // Can set this to false to enable building even with errors
+    "noEmitOnError": false,
     "noEmit": true,
     "allowJs": true,
     "resolveJsonModule": false
