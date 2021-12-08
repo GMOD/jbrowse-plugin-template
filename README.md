@@ -87,7 +87,7 @@ plugin already included in the configuration. Your plugin must also be running
 
 Runs any unit tests defined during plugin development.
 
-#### `yarn test:cy` or `npm run test:cy`
+#### `yarn cypress:run` or `npm run cypress:run`
 
 Runs the [cypress](https://www.cypress.io/) integration tests for your plugin.
 Both the plugin and `browse` must already be running.
