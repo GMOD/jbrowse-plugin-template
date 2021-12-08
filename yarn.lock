@@ -1020,7 +1020,7 @@
   resolved "https://registry.yarnpkg.com/@istanbuljs/schema/-/schema-0.1.2.tgz#26520bf09abe4a5644cd5414e37125a8954241dd"
   integrity sha512-tsAQNx32a8CoFhjhijUIhI4kccIAgmGhy8LZMZgGfmXcpMbPRUqn5LWmgRttILi6yeGmBJd2xsPkFMs0PzgPCw==
 
-"@jbrowse/cli@1.5.1":
+"@jbrowse/cli@^1.5.1":
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/@jbrowse/cli/-/cli-1.5.1.tgz#2eb7ae3e27b3f5412a4c1451797aab4b180c70f5"
   integrity sha512-43yXX1KSpg9dP3WTa2u5UPINLEQZcETtyy6Zvwrqb4jRYyVrBSwDn+FvQI373U9bZqmKnwPEei9pWEmTEZihqA==
