@@ -55,27 +55,28 @@
     "singleQuote": true,
     "trailingComma": "all"
   },
-  "jest": {
-    "testPathIgnorePatterns": [
-      "<rootDir>/cypress/"
-    ]
-  },
   "dependencies": {
-    "tslib": "^2.3.1",
-    "regenerator-runtime": "^0.13.9"
+    "regenerator-runtime": "^0.13.9",
+    "tslib": "^2.3.1"
   },
   "peerDependencies": {
-    "@jbrowse/core": "^1.5.0"
+    "@jbrowse/core": "^1.5.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.16.5",
     "@babel/preset-react": "^7.10.4",
     "@jbrowse/cli": "^1.5.1",
-    "@jbrowse/core": "^1.5.0",
+    "@jbrowse/core": "^1.5.2",
     "@jbrowse/development-tools": "^1.5.2",
     "@material-ui/core": "^4.9.13",
     "@material-ui/lab": "^4.0.0-alpha.45",
     "@schemastore/package": "^0.0.6",
+    "@testing-library/jest-dom": "^5.16.1",
+    "@testing-library/react": "^12.1.2",
+    "@types/node": "^16.11.13",
     "@types/react": "^17.0.0",
+    "@types/testing-library__jest-dom": "^5.14.2",
+    "@types/testing-library__react": "^10.2.0",
     "@typescript-eslint/eslint-plugin": "^4.0.0",
     "@typescript-eslint/parser": "^4.0.0",
     "babel-eslint": "^10.0.0",
@@ -92,18 +93,21 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.20.3",
     "eslint-plugin-react-hooks": "^4.0.8",
+    "jest": "^27.4.5",
     "mobx": "^5.0.0",
     "mobx-react": "^6.0.0",
     "mobx-state-tree": "3.14.1",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.4.1",
     "react": "^16.8.0",
+    "react-dom": "^16.8.0",
     "rimraf": "^3.0.2",
     "rollup": "^2.59.0",
     "rxjs": "^6.0.0",
     "serve": "^11.3.2",
     "shx": "^0.3.3",
     "start-server-and-test": "^1.11.7",
+    "ts-jest": "^27.1.1",
     "ts-node": "^10.3.0",
     "typescript": "^4.1.3"
   },
