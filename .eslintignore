@@ -4,5 +4,5 @@ coverage
 # Dependency directories
 node_modules/
 
-# TSDX build / generate output
+# build / generated output
 dist

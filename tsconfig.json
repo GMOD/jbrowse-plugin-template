@@ -28,11 +28,20 @@
     "skipLibCheck": true,
     // error out if import and file system have a casing mismatch. Recommended by TS
     "forceConsistentCasingInFileNames": true,
-    // `tsdx build` ignores this option, but it is commonly used when type-checking separately with `tsc`
+    // `rollup` ignores this option, but it is commonly used when type-checking separately with `tsc`
     "noEmit": true,
+    // Can set this to false to enable building even with errors
+    "noEmitOnError": true,
+    // Can remove this if only using TypeScript
     "allowJs": true,
-    "resolveJsonModule": false
+    // Allow importing JSON files
+    "resolveJsonModule": false,
+  },
+  // Jest uses ts-node to load the jest.config.ts file
+  "ts-node": {
+    "transpileOnly": true,
+    "project": "./tsconfig.test.json",
   },
   "include": ["src"],
-  "exclude": ["**/dist/"]
+  "exclude": ["**/dist/"],
 }
