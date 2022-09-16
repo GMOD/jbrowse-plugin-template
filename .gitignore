@@ -121,3 +121,6 @@ dist
 # Cypress specific files
 cypress/videos
 cypress/screenshots
+
+# Ignore code editor
+.vscode
