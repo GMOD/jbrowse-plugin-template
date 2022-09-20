@@ -12,6 +12,7 @@ project.
 - [git](https://git-scm.com/downloads)
 - [Node.js](https://nodejs.org/en/download/) (version 10 or greater)
 - [yarn](https://yarnpkg.com/en/docs/install) (or npm which comes with Node.js)
+- [JBrowse 2](https://github.com/gmod/jbrowse-components) (version 2.0 or greater)
 
 ### Create a new project from this template
 
@@ -72,6 +73,8 @@ To develop against JBrowse Web:
   http://localhost:3000/?config=http://localhost:9000/jbrowse_config.json
 - When you make changes to your plugin, it will automatically be re-built.
   You can then refresh JBrowse Web to see the changes.
+
+**Note:** The current version of `jbrowse-plugin-template` is only compatible with "JBrowse 2" v2.0 or greater. If you are developing for a version of "JBrowse 2" v1.x, please consider upgrading, or you will have to manually downgrade the package dependencies in this template to ensure compatibility.
 
 ### Testing
 
