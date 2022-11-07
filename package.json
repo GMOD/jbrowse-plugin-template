@@ -44,7 +44,7 @@
     "cypress:open": "cross-var cypress open --config baseUrl=http://localhost:$npm_package_config_browse_port",
     "lint": "eslint --ext .js,.ts,.jsx,.tsx src/",
     "prepublishOnly": "npm-run-all test",
-    "prepare": "npm-run-all build",
+    "prepack": "npm-run-all build",
     "postversion": "git push --follow-tags"
   },
   "jbrowse-plugin": {
