@@ -30,8 +30,6 @@
     "forceConsistentCasingInFileNames": true,
     // `rollup` ignores this option, but it is commonly used when type-checking separately with `tsc`
     "noEmit": true,
-    // Can set this to false to enable building even with errors
-    "noEmitOnError": true,
     // Can remove this if only using TypeScript
     "allowJs": true,
     // Allow importing JSON files
