@@ -13,6 +13,8 @@ export default class TemplatePlugin extends Plugin {
   version = version
 
   install(pluginManager: PluginManager) {
+    console.log('t1')
+    console.log('t2')
     pluginManager.addViewType(() => {
       return new ViewType({
         name: 'HelloView',

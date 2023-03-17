@@ -19,7 +19,7 @@ const includeCJS = stringToBoolean(process.env.JB_CJS)
 const includeESMBundle = stringToBoolean(process.env.JB_ESM_BUNDLE)
 const includeNPM = stringToBoolean(process.env.JB_NPM)
 
-export default createRollupConfig(globals, {
+export default createRollupConfig(globals.default, {
   includeUMD,
   includeCJS,
   includeESMBundle,
