@@ -1,6 +1,7 @@
 import fs from 'fs'
 import os from 'os'
 import path from 'path'
+import chalk from 'chalk'
 import { JSONSchemaForNPMPackageJsonFiles } from '@schemastore/package'
 import {
   getSafePackageName,
@@ -13,7 +14,6 @@ import {
 const { readFile, writeFile } = fs.promises
 
 async function main() {
-  const chalk = await import('chalk').then((d) => d.default)
   const packageJSON = await readJSON(path.join(__dirname, '..', 'package.json'))
   const rawPackageName = packageJSON.name
   // ensure that yarn init has been run
