@@ -10,7 +10,8 @@ import {
 
 export default class TemplatePlugin extends Plugin {
   name = 'TemplatePlugin'
-  version = version
+
+  version = version as string
 
   install(pluginManager: PluginManager) {
     pluginManager.addViewType(() => {

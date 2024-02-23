@@ -1,17 +1,26 @@
+/** @type {import("eslint").Linter.Config} */
 module.exports = {
-  extends: ['react-app', 'plugin:prettier/recommended'],
+  parser: '@typescript-eslint/parser',
+  plugins: ['prettier', '@typescript-eslint'],
+  extends: [
+    'plugin:@typescript-eslint/recommended',
+    'plugin:@typescript-eslint/recommended-type-checked',
+    'plugin:@typescript-eslint/stylistic-type-checked',
+    'plugin:prettier/recommended',
+  ],
   settings: {
     react: {
       version: 'detect',
     },
   },
+  parserOptions: {
+    tsconfigRootDir: __dirname,
+    project: './tsconfig.json',
+  },
   rules: {
     '@typescript-eslint/no-unused-vars': [
       'warn',
-      {
-        args: 'after-used',
-        ignoreRestSiblings: true,
-      },
+      { argsIgnorePattern: '^_', ignoreRestSiblings: true },
     ],
   },
 }

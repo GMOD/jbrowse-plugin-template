@@ -6,9 +6,14 @@ const stateModel = types
     id: ElementId,
     type: types.literal('HelloView'),
   })
-  .actions(() => ({
+  .volatile(() => ({
+    width: undefined as number | undefined,
+  }))
+  .actions((self) => ({
     // unused but required by your view
-    setWidth() {},
+    setWidth(arg: number) {
+      self.width = arg
+    },
   }))
 
 export default stateModel
