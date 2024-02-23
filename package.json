@@ -50,11 +50,6 @@
   "jbrowse-plugin": {
     "name": "Template"
   },
-  "prettier": {
-    "semi": false,
-    "singleQuote": true,
-    "trailingComma": "all"
-  },
   "peerDependencies": {
     "@jbrowse/core": "^1.5.2"
   },

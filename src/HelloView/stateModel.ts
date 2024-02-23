@@ -9,7 +9,7 @@ const stateModel = types
   .volatile(() => ({
     width: undefined as number | undefined,
   }))
-  .actions((self) => ({
+  .actions(self => ({
     // unused but required by your view
     setWidth(arg: number) {
       self.width = arg
