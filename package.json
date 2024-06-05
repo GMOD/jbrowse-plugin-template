@@ -50,11 +50,6 @@
   "jbrowse-plugin": {
     "name": "Template"
   },
-  "prettier": {
-    "semi": false,
-    "singleQuote": true,
-    "trailingComma": "all"
-  },
   "peerDependencies": {
     "@jbrowse/core": "^2.0.0"
   },
@@ -67,15 +62,15 @@
     "@jbrowse/development-tools": "^2.1.1",
     "@mui/material": "^5.10.5",
     "@mui/system": "^5.10.5",
-    "@mui/x-data-grid": "^6.9.2",
+    "@mui/x-data-grid": "^7.6.1",
     "@schemastore/package": "^0.0.10",
     "@testing-library/jest-dom": "^6.1.5",
-    "@testing-library/react": "^14.1.2",
+    "@testing-library/react": "^15.0.0",
     "@types/jest": "^29.5.11",
     "@types/node": "^20.10.5",
     "@types/react": "^18.2.45",
-    "@typescript-eslint/eslint-plugin": "^6.15.0",
-    "@typescript-eslint/parser": "^6.15.0",
+    "@typescript-eslint/eslint-plugin": "^7.12.0",
+    "@typescript-eslint/parser": "^7.12.0",
     "chalk": "^4.0.0",
     "cross-env": "^7.0.3",
     "cross-var": "^1.1.0",

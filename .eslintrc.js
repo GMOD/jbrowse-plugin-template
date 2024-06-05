@@ -1,4 +1,5 @@
 module.exports = {
+  root: true,
   extends: [
     'plugin:prettier/recommended',
     'plugin:@typescript-eslint/recommended',
@@ -23,6 +24,9 @@ module.exports = {
   rules: {
     '@typescript-eslint/no-empty-function': 0,
     '@typescript-eslint/no-unsafe-assignment': 0,
+    '@typescript-eslint/no-unsafe-call': 0,
+    '@typescript-eslint/no-unsafe-return': 0,
+    '@typescript-eslint/no-unsafe-member-access': 0,
     '@typescript-eslint/no-unused-vars': [
       'warn',
       {

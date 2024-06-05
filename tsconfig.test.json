@@ -1,8 +1,6 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "module":"esnext",
-    "target":"esnext",
     "rootDir": "./"
   },
   "include": ["./jest.config.ts", "./jest.setup.ts"]
