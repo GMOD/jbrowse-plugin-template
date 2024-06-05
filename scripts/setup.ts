@@ -3,16 +3,15 @@ import os from 'os'
 import path from 'path'
 import chalk from 'chalk'
 import { JSONSchemaForNPMPackageJsonFiles } from '@schemastore/package'
+import {
+  getSafePackageName,
+  getUrlFromRepo,
+  readJSON,
+  toPascalCase,
+  writeJSON,
+} from './util'
 
-const fsPromises = fs.promises
-
-type JSONValue =
-  | string
-  | number
-  | boolean
-  | null
-  | JSONValue[]
-  | { [key: string]: JSONValue }
+const { readFile, writeFile } = fs.promises
 
 async function main() {
   const packageJSON = await readJSON(path.join(__dirname, '..', 'package.json'))
@@ -35,18 +34,16 @@ async function main() {
     process.exit(1)
   }
 
-  const packageName = getSafePackageName(rawPackageName)
+  const n = getSafePackageName(rawPackageName)
   const prefix = 'jbrowse-plugin-'
-  const pluginClassName = toPascalCase(
-    packageName.startsWith(prefix)
-      ? packageName.slice(prefix.length)
-      : packageName,
+  const className = toPascalCase(
+    n.startsWith(prefix) ? n.slice(prefix.length) : n,
   )
 
-  updatePackageJSON(pluginClassName, packageJSON)
-  updateSrcIndex(pluginClassName)
-  updateJBrowseConfig(packageName, pluginClassName)
-  updateExampleFixture(packageName, pluginClassName)
+  updatePackageJSON(className, packageJSON)
+  updateSrcIndex(className)
+  updateJBrowseConfig(n, className)
+  updateExampleFixture(n, className)
   updateReadme(rawPackageName, packageJSON.repository)
 }
 
@@ -54,11 +51,13 @@ function updatePackageJSON(
   pluginName: string,
   packageJSON: JSONSchemaForNPMPackageJsonFiles,
 ) {
-  // 1. Change "name" in the "jbrowse-plugin" and "config" fields to the name of your project (e.g. "MyProject")
+  // 1. Change "name" in the "jbrowse-plugin" and "config" fields to the name
+  // of your project (e.g. "MyProject")
   packageJSON['jbrowse-plugin'].name = pluginName
   if (!packageJSON.config) {
     packageJSON.config = {}
   }
+  // @ts-expect-error
   packageJSON.config.jbrowse.plugin.name = pluginName
 
   // this overwrites package.json
@@ -68,9 +67,9 @@ function updatePackageJSON(
 // replace default plugin name in example plugin class
 async function updateSrcIndex(pluginClassName: string) {
   const indexFilePath = path.join('src', 'index.ts')
-  let indexFile = await fsPromises.readFile(indexFilePath, 'utf-8')
+  let indexFile = await readFile(indexFilePath, 'utf-8')
   indexFile = indexFile.replace(/TemplatePlugin/g, `${pluginClassName}Plugin`)
-  fsPromises.writeFile(indexFilePath, indexFile)
+  writeFile(indexFilePath, indexFile)
 }
 
 // replace default plugin name and url with project name and dist file
@@ -104,97 +103,17 @@ async function updateReadme(
 ) {
   // add status badge to README
   const repoUrl = getUrlFromRepo(repository)
-  let readmeLines = (await fsPromises.readFile('README.md', 'utf-8')).split(
-    /\r?\n/,
-  )
-  if (readmeLines[0].startsWith(`# ${packageName}`)) {
+  let readme = (await readFile('README.md', 'utf-8')).split(/\r?\n/)
+  if (readme[0].startsWith(`# ${packageName}`)) {
     return
   }
-  readmeLines[0] = `# ${packageName}`
+  readme[0] = `# ${packageName}`
   if (repoUrl !== undefined) {
-    readmeLines.unshift(
+    readme.unshift(
       `![Integration](${repoUrl}/workflows/Integration/badge.svg?branch=main)${os.EOL}`,
     )
   }
-  fsPromises.writeFile('README.md', readmeLines.join(os.EOL), 'utf8')
-}
-
-/*
-****************************
-Helpers
-****************************
-*/
-
-async function writeJSON(path: string, data: JSONValue) {
-  let jsonString
-  try {
-    jsonString = JSON.stringify(data, null, 2)
-  } catch (error) {
-    console.error('There was a problem converting an object to JSON')
-    throw error
-  }
-  return fsPromises.writeFile(path, `${jsonString}\n`)
-}
-
-async function readJSON(path: string) {
-  let jsonString
-  try {
-    jsonString = await fsPromises.readFile(path, 'utf8')
-  } catch (error) {
-    console.error(`Could not read JSON file at ${path}`)
-    throw error
-  }
-  let jsonData
-  try {
-    jsonData = JSON.parse(jsonString)
-  } catch (error) {
-    console.error(
-      `Could not parse JSON file at ${path}, check for JSON syntax errors`,
-    )
-    throw error
-  }
-  return jsonData
-}
-
-// snagged from https://stackoverflow.com/a/53952925
-function toPascalCase(string: string) {
-  return `${string}`
-    .replace(new RegExp(/[-_]+/, 'g'), ' ')
-    .replace(new RegExp(/[^\w\s]/, 'g'), '')
-    .replace(
-      new RegExp(/\s+(.)(\w+)/, 'g'),
-      ($1, $2, $3) => `${$2.toUpperCase() + $3.toLowerCase()}`,
-    )
-    .replace(new RegExp(/\s/, 'g'), '')
-    .replace(new RegExp(/\w/), s => s.toUpperCase())
-}
-
-function getSafePackageName(name: string) {
-  return name
-    .toLowerCase()
-    .replace(/(^@.*\/)|((^[^a-zA-Z]+)|[^\w.-])|([^a-zA-Z0-9]+$)/g, '')
-}
-
-function getUrlFromRepo(repo: JSONSchemaForNPMPackageJsonFiles['repository']) {
-  if (repo === undefined) {
-    return repo
-  }
-  let url = undefined
-  if (typeof repo === 'string') {
-    url = repo
-  } else if (typeof repo === 'object') {
-    url = repo.url
-  }
-
-  if (typeof url === 'string') {
-    if (url.includes('github.com')) {
-      return url.replace(/\.git$/, '')
-    }
-    if (url.startsWith('github:')) {
-      return `https://github.com/${url.split(':')[1]}`
-    }
-  }
-  return undefined
+  writeFile('README.md', readme.join(os.EOL), 'utf8')
 }
 
 main()
