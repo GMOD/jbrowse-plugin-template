@@ -12,17 +12,6 @@
     "dist",
     "src"
   ],
-  "config": {
-    "port": 9000,
-    "browse": {
-      "port": 8999
-    },
-    "jbrowse": {
-      "plugin": {
-        "name": "Template"
-      }
-    }
-  },
   "scripts": {
     "setup": "npm-run-all setup:*",
     "setup:file": "ts-node scripts/setup.ts",
@@ -32,16 +21,16 @@
     "clean": "rimraf dist",
     "start": "npm-run-all --sequential clean --parallel start:*",
     "start:watch": "cross-env JB_NPM=false NODE_ENV=development rollup --config --watch --bundleConfigAsCjs",
-    "start:server": "serve --cors --listen $npm_package_config_port .",
+    "start:server": "serve --cors --listen 9000 .",
     "prebuild": "npm-run-all clean",
     "build": "rollup --config --bundleConfigAsCjs",
     "browse": "npm-run-all jbrowse:*",
-    "jbrowse:configure": "shx cp jbrowse_config.json .jbrowse/config.json",
-    "jbrowse:serve": "cross-var serve --listen $npm_package_config_browse_port .jbrowse",
+    "jbrowse:configure": "cp jbrowse_config.json .jbrowse/config.json",
+    "jbrowse:serve": "serve --listen 8999 .jbrowse",
     "test": "jest",
-    "test:e2e": "cross-var start-test \"npm-run-all --parallel start browse\" \"$npm_package_config_port|$npm_package_config_browse_port\" \"npm-run-all cypress:run\"",
-    "cypress:run": "cross-var cypress run --headless --browser chrome --config baseUrl=http://localhost:$npm_package_config_browse_port",
-    "cypress:open": "cross-var cypress open --config baseUrl=http://localhost:$npm_package_config_browse_port",
+    "test:e2e": "start-test \"npm-run-all --parallel start browse\" \"9000|8999\" \"npm-run-all cypress:run\"",
+    "cypress:run": "cypress run --headless --browser chrome --config baseUrl=http://localhost:8999",
+    "cypress:open": "cypress open --config baseUrl=http://localhost:8999",
     "lint": "eslint src/",
     "prepublishOnly": "npm-run-all test",
     "prepack": "npm-run-all build",
@@ -72,12 +61,9 @@
     "@types/react": "^19.1.2",
     "chalk": "^4.0.0",
     "cross-env": "^7.0.3",
-    "cross-var": "^1.1.0",
     "cypress": "^14.3.2",
     "eslint": "^9.25.1",
-    "eslint-config-prettier": "^10.1.2",
     "eslint-plugin-jsx-a11y": "^6.3.1",
-    "eslint-plugin-prettier": "^5.1.0",
     "eslint-plugin-react": "^7.20.3",
     "eslint-plugin-react-hooks": "^5.2.0",
     "jest": "^29.7.0",

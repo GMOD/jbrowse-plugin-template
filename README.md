@@ -11,8 +11,7 @@ project.
 
 - [git](https://git-scm.com/downloads)
 - [Node.js](https://nodejs.org/en/download/) (version 10 or greater)
-- npm (which comes with Node.js)
-- [yarn](https://yarnpkg.com/en/docs/install) (optional)
+- [yarn](https://yarnpkg.com/en/docs/install) (or npm which comes with Node.js)
 - [JBrowse 2](https://github.com/gmod/jbrowse-components) (version 2.0 or
   greater)
 
@@ -43,17 +42,17 @@ $ git init
 
 ### Setup
 
-Run `npm init` and answer the prompts to fill out the information for your
-plugin:
+Run `yarn init` (or `npm init`) and answer the prompts to fill out the
+information for your plugin
 
 - Make sure you at least enter a "name" (probably starting with
   "jbrowse-plugin-", or "@myscope/jbrowse-plugin-" if you're going to publish to
   an NPM organization)
 - Other fields may be left blank
-- Leave the "entry point" as `dist/index.js`
+- leave the "entry point" as `dist/index.js`
 
-Now run `yarn` (or `npm install` to use npm instead of yarn) to install the
-necessary dependencies.
+Now run `yarn` (or `rm yarn.lock && npm install` to use npm instead of yarn) to
+install the necessary dependencies.
 
 After this, run `yarn setup` (or `npm run setup`). This configures your project,
 and adds a build of JBrowse 2 that can be used to test your plugin during
