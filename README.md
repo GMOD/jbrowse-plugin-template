@@ -190,4 +190,3 @@ JavaScript for development. If using only JavaScript, you can change
 If using only TypeScript, you can remove `"allowJs": true` from `tsconfig.json`
 and `"@babel/preset-react"` from `.babelrc` (and from "devDependencies" in
 `package.json`).
-
