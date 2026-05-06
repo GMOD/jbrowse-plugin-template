@@ -7,7 +7,7 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     globals: true, // exposes it/expect/describe without imports, matching jest API
-    setupFiles: ['./src/setupTests.ts'],
+    setupFiles: ['./test/setupTests.ts'],
     include: ['test/**/*.test.tsx'],
     exclude: ['**/node_modules/**', '**/dist/**'],
   },
