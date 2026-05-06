@@ -6,6 +6,8 @@
     "jbrowse",
     "jbrowse2"
   ],
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
   "files": [
     "dist",
     "src"
