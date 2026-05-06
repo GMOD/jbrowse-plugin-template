@@ -1,7 +1,7 @@
+import { fireEvent, render, screen } from '@testing-library/react'
 import React from 'react'
-import { render, fireEvent, screen } from '@testing-library/react'
-import '@testing-library/jest-dom'
-import HelloView from './HelloView'
+
+import HelloView from '../src/HelloView/components/HelloView'
 
 it('renders and reacts to button push', async () => {
   render(<HelloView />)

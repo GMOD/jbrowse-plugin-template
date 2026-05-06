@@ -1,6 +1,7 @@
-import { MenuItem } from '@jbrowse/core/ui'
 import { ElementId } from '@jbrowse/core/util/types/mst'
-import { types } from 'mobx-state-tree'
+import { types } from '@jbrowse/mobx-state-tree'
+
+import type { MenuItem } from '@jbrowse/core/ui'
 
 const stateModel = types
   .model({
@@ -8,12 +9,11 @@ const stateModel = types
     type: types.literal('HelloView'),
   })
   .actions(() => ({
-    // unused by this view but it is updated with th current width in pixels of
-    // the view panel
+    // Required by the view contract; called with panel width in pixels on resize.
     setWidth() {},
   }))
   .views(() => ({
-    // unused by this view, but represents of 'view level' menu items
+    // Required by the view contract; populates the view's header kebab menu.
     menuItems(): MenuItem[] {
       return []
     },

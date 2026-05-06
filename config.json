@@ -1,0 +1,39 @@
+{
+  "plugins": [
+    {
+      "name": "Template",
+      "url": "http://localhost:9000/dist/out.js"
+    }
+  ],
+  "assemblies": [
+    {
+      "name": "hg19",
+      "aliases": ["GRCh37"],
+      "sequence": {
+        "type": "ReferenceSequenceTrack",
+        "trackId": "Pd8Wh30ei9R",
+        "adapter": {
+          "type": "BgzipFastaAdapter",
+          "fastaLocation": {
+            "uri": "https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz"
+          },
+          "faiLocation": {
+            "uri": "https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz.fai"
+          },
+          "gziLocation": {
+            "uri": "https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz.gzi"
+          }
+        }
+      }
+    }
+  ],
+  "defaultSession": {
+    "name": "Template test session",
+    "views": [
+      {
+        "id": "hello-view-1",
+        "type": "HelloView"
+      }
+    ]
+  }
+}

@@ -1,192 +1,90 @@
 # jbrowse-plugin-template
 
-> Template to quickly start a new JBrowse plugin
+Template for creating JBrowse 2 plugins using rollup and pnpm.
 
-## Usage
+## Setup
 
-You can use this template to create a new GitHub repository or a new local
-project.
-
-### Software requirements
-
-- [git](https://git-scm.com/downloads)
-- [Node.js](https://nodejs.org/en/download/) (version 10 or greater)
-- npm (which comes with Node.js)
-- [yarn](https://yarnpkg.com/en/docs/install) (optional)
-- [JBrowse 2](https://github.com/gmod/jbrowse-components) (version 2.0 or
-  greater)
-
-### Create a new project from this template
-
-You can click the "Use this template" button in the repository (instructions
-[here](https://docs.github.com/en/free-pro-team@latest/github/creating-cloning-and-archiving-repositories/creating-a-repository-from-a-template)):
-
-![screenshot showing where "Use this template" button is in the GitHub repository page](https://user-images.githubusercontent.com/25592344/102671843-eb8ae380-414c-11eb-84e5-6ebf10bd89f9.png)
-
-Or you can use the GitHub CLI:
+Via GitHub CLI:
 
 ```console
-$ gh repo create jbrowse-plugin-my-project --template https://github.com/GMOD/jbrowse-plugin-template.git
+gh repo create jbrowse-plugin-my-project --template GMOD/jbrowse-plugin-template
+cd jbrowse-plugin-my-project
+pnpm install
 ```
 
-Or you can start a plugin locally:
+Or clone manually:
 
 ```console
-$ git clone https://github.com/GMOD/jbrowse-plugin-template.git jbrowse-plugin-my-project
-$ cd jbrowse-plugin-my-project
-$ rm -rf .git
-$ # If you want to use Git, re-initialize it
-$ git init
+git clone https://github.com/GMOD/jbrowse-plugin-template.git jbrowse-plugin-my-project
+cd jbrowse-plugin-my-project
+rm -rf .git && git init
+pnpm install
 ```
 
-## Getting started
+### Renaming the plugin
 
-### Setup
+The plugin name appears in several places that must all stay in sync:
 
-Run `npm init` and answer the prompts to fill out the information for your
-plugin:
+| File | What to change |
+|---|---|
+| `package.json` | `name` field |
+| `rollup.config.mjs` | `name` in output and `outfile` names |
+| `src/index.ts` | class name and `name` field |
+| `config.json` | plugin `name` and `url` |
 
-- Make sure you at least enter a "name" (probably starting with
-  "jbrowse-plugin-", or "@myscope/jbrowse-plugin-" if you're going to publish to
-  an NPM organization)
-- Other fields may be left blank
-- Leave the "entry point" as `dist/index.js`
+## Development
 
-Now run `yarn` (or `npm install` to use npm instead of yarn) to install the
-necessary dependencies.
-
-After this, run `yarn setup` (or `npm run setup`). This configures your project,
-and adds a build of JBrowse 2 that can be used to test your plugin during
-development.
-
-### Build
+Run in two terminals:
 
 ```console
-$ yarn build ## or `npm run build`
+pnpm start   # rollup watch — rebuilds on file changes
+pnpm serve   # static file server on port 9000
 ```
 
-### Development
+Point JBrowse Web at: `http://localhost:3000/?config=http://localhost:9000/config.json`
 
-To develop against JBrowse Web:
+## Build
 
-- Start a development version of JBrowse Web (see
-  [here](https://github.com/GMOD/jbrowse-components/blob/master/CONTRIBUTING.md))
-- In this project, run `yarn start` (or `npm run start`)
-- Assuming JBrowse Web is being served on port 3000, navigate in your web
-  browser to
-  http://localhost:3000/?config=http://localhost:9000/jbrowse_config.json
-- When you make changes to your plugin, it will automatically be re-built. You
-  can then refresh JBrowse Web to see the changes.
+```console
+pnpm build  # tsc + rollup UMD bundle → dist/
+```
 
-**Note:** The current version of `jbrowse-plugin-template` is only compatible
-with "JBrowse 2" v2.0 or greater. If you are developing for a version of
-"JBrowse 2" v1.x, please consider upgrading, or you will have to manually
-downgrade the package dependencies in this template to ensure compatibility.
+## Testing
 
-### Testing
+```console
+pnpm test       # unit tests (jsdom + React Testing Library)
+pnpm test:e2e   # puppeteer against nightly JBrowse (downloads on first run)
+```
 
-To test your plugin, there are several commands available:
+## Deployment
 
-#### `yarn browse` or `npm run browse`
+There are many ways to deploy — some options:
 
-Launches your local JBrowse 2 build that is used for integration testing, with
-your plugin already included in the configuration. Your plugin must also be
-running (`yarn start` or `npm run start`).
+- **npm** — remove `"private": true` from `package.json` and `pnpm publish` (consider [npm trusted publishing](https://docs.npmjs.com/generating-provenance-statements)); reference via unpkg:
+  ```json
+  { "plugins": [{ "name": "MyPlugin", "url": "https://unpkg.com/jbrowse-plugin-my-project/dist/jbrowse-plugin-my-project.umd.production.min.js" }] }
+  ```
+- **Copy the bundle** — run `pnpm build` and place the `.umd.production.min.js` anywhere your JBrowse instance can reach, then reference it by URL in `config.json`.
+- **Skip publishing** — for internal use, just serve the bundle locally and point your JBrowse config at it.
 
-#### `yarn test` or `npm test`
+## Embedded components
 
-Runs any unit tests defined during plugin development.
-
-#### `yarn cypress:run` or `npm run cypress:run`
-
-Runs the [cypress](https://www.cypress.io/) integration tests for your plugin.
-Both the plugin and `browse` must already be running.
-
-#### `yarn test:e2e` or `npm run test:e2e`
-
-Starts up the JBrowse 2 build as well as your plugin, and runs the
-[cypress](https://www.cypress.io/) integration tests against them. Closes both
-resources after tests finish.
-
-#### `yarn cypress` or `npm run cypress`
-
-Launches the [cypress](https://www.cypress.io/) test runner, which can be very
-useful for writing integration tests for your plugin. Both the plugin and
-`browse` must already be running.
-
-#### Github Action
-
-This template includes a [Github action](https://github.com/features/actions)
-that runs your integration tests when you push new changes to your repository.
-
-### Publishing to NPM
-
-Once you have developed your plugin, you can publish it to NPM. Remember to
-remove `"private": true` from `package.json` before doing so.
-
-### Using plugins with embedded components
-
-If you are using plugins in the embedded apps such as
-`@jbrowse/react-linear-genome-view`, then you can install jbrowse plugins such
-as this one using normal "npm install jbrowse-plugin-yourplugin" if you have
-published them to NPM, and use code like this
+To use this plugin with `@jbrowse/react-linear-genome-view`, install it from npm and pass it via `plugins`:
 
 ```typescript
-import React from 'react'
-import ViewType from '@jbrowse/core/pluggableElementTypes/ViewType'
-import PluginManager from '@jbrowse/core/PluginManager'
-import Plugin from '@jbrowse/core/Plugin'
-
-// in your code
 import { createViewState, JBrowseLinearGenomeView } from '@jbrowse/react-linear-genome-view'
-import MyPlugin from 'jbrowse-plugin-yourplugin'
+import MyPlugin from 'jbrowse-plugin-my-project'
 
-export const MyApp = () => {
-  const state = createViewState({
-    assembly: {/*...your assembly config...*/},
-    plugins: [MyPlugin],
-    tracks: [/*...your track configs...*/],
-    location: 'ctgA:1105..1221',
-  })
-
-  return (
-    <JBrowseLinearGenomeView viewState={state} />
-  )
-}
+const state = createViewState({
+  assembly: { /* ... */ },
+  plugins: [MyPlugin],
+  tracks: [ /* ... */ ],
+  location: 'chr1:1-100000',
+})
 ```
 
-See https://jbrowse.org/storybook/lgv/main/?path=/docs/using-plugins--docs for
-live example, and also method for loading plugins from urls instead of from NPM
-in embedded
+See https://jbrowse.org/storybook/lgv/main/?path=/docs/using-plugins--docs for a live example.
 
-### Using plugins with JBrowse Web
+---
 
-If you are using JBrowse Web, after the plugin is published to NPM, you can use
-[unpkg](https://unpkg.com/) to host plugin bundle. The plugin can then be
-referenced by URL in the config.json
-
-A JBrowse Web config using this plugin would look like this:
-
-```json
-{
-  "plugins": [
-    {
-      "name": "MyProject",
-      "url": "https://unpkg.com/jbrowse-plugin-my-project/dist/jbrowse-plugin-my-project.umd.production.min.js"
-    }
-  ]
-}
-```
-
-You can also use a specific version in unpkg, such as
-`https://unpkg.com/jbrowse-plugin-my-project@1.0.1/dist/jbrowse-plugin-my-project.umd.production.min.js`
-
-### TypeScript vs. JavaScript
-
-This template is set up in such a way that you can use both TypeScript and
-JavaScript for development. If using only JavaScript, you can change
-`src/index.ts` to `src/index.js`.
-
-If using only TypeScript, you can remove `"allowJs": true` from `tsconfig.json`
-and `"@babel/preset-react"` from `.babelrc` (and from "devDependencies" in
-`package.json`).
+See [jbrowse-plugin-esbuild-template](https://github.com/GMOD/jbrowse-plugin-esbuild-template) for an alternative using esbuild instead of rollup.
