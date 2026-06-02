@@ -67,6 +67,21 @@ There are many ways to deploy — some options:
 - **Copy the bundle** — run `pnpm build` and place the `.umd.production.min.js` anywhere your JBrowse instance can reach, then reference it by URL in `config.json`.
 - **Skip publishing** — for internal use, just serve the bundle locally and point your JBrowse config at it.
 
+## Shared packages (re-exports)
+
+JBrowse exposes a set of packages — React, MUI, mobx, mobx-state-tree, and others — on `window.JBrowseExports` at runtime. Plugins **must** use these shared instances rather than bundling their own copies; a second copy of React (for example) causes hook errors and broken state.
+
+The rollup config handles this automatically via `externalGlobals`: any import from a package in `@jbrowse/core/ReExports/list` is replaced with a `JBrowseExports["package-name"]` lookup at build time. You import these packages normally in TypeScript — no special syntax required:
+
+```typescript
+import { observer } from 'mobx-react'   // → JBrowseExports["mobx-react"]
+import { types } from 'mobx-state-tree' // → JBrowseExports["mobx-state-tree"]
+```
+
+To see the full list of available packages: `node -e "console.log(require('@jbrowse/core/ReExports/list').default)"` (or inspect the source in `node_modules/@jbrowse/core/ReExports/list.js`).
+
+If you need to access another loaded plugin from your plugin, use `pluginManager.getPlugin('PluginName')` inside `install()` or `configure()`.
+
 ## Embedded components
 
 To use this plugin with `@jbrowse/react-linear-genome-view`, install it from npm and pass it via `plugins`:
