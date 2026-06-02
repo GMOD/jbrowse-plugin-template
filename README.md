@@ -82,6 +82,24 @@ To see the full list of available packages: `node -e "console.log(require('@jbro
 
 If you need to access another loaded plugin from your plugin, use `pluginManager.getPlugin('PluginName')` inside `install()` or `configure()`.
 
+## Using CSS from dependencies
+
+The rollup build does not have a CSS loader. If a dependency (e.g. Mol* / molstar) requires CSS, inject it at runtime with a small helper instead of importing the `.css` file directly:
+
+```typescript
+function injectCSS(css: string) {
+  const style = document.createElement('style')
+  style.appendChild(document.createTextNode(css))
+  document.head.appendChild(style)
+}
+
+// then call it with the raw CSS string, e.g. pulled in via a bundler plugin
+// or copied inline
+injectCSS(`.my-class { color: red }`)
+```
+
+This avoids needing a specialized CSS loader in either rollup or esbuild.
+
 ## Embedded components
 
 To use this plugin with `@jbrowse/react-linear-genome-view`, install it from npm and pass it via `plugins`:
