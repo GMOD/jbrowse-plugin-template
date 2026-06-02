@@ -34,12 +34,11 @@ The plugin name appears in several places that must all stay in sync:
 
 ## Development
 
-Run in two terminals:
-
 ```console
-pnpm start   # rollup watch — rebuilds on file changes
-pnpm serve   # static file server on port 9000
+pnpm dev  # rollup watch + static file server on port 9000 (runs both in parallel)
 ```
+
+Or run separately: `pnpm start` (rollup watch) and `pnpm serve` (file server).
 
 Point JBrowse Web at: `http://localhost:3000/?config=http://localhost:9000/config.json`
 

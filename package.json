@@ -16,6 +16,7 @@
     "clean": "rimraf dist",
     "format": "pnpm prettier --write .",
     "prebuild": "pnpm clean",
+    "dev": "concurrently \"pnpm start\" \"pnpm serve\"",
     "start": "NODE_ENV=development rollup -c rollup.config.mjs --watch",
     "serve": "serve --cors --listen 9000 .",
     "build": "tsc && NODE_ENV=production rollup -c rollup.config.mjs",
@@ -31,6 +32,7 @@
   },
   "devDependencies": {
     "@emotion/react": "^11.14.0",
+    "concurrently": "^10.0.3",
     "@eslint/js": "^10.0.1",
     "@jbrowse/cli": "^4.2.1",
     "@jbrowse/core": "^4.2.0",
