@@ -4,7 +4,7 @@ Template for creating JBrowse 2 plugins using rollup and pnpm.
 
 ## Setup
 
-Requires [pnpm](https://pnpm.io/installation) (`npm install -g pnpm` or `corepack enable pnpm`).
+Requires [pnpm](https://pnpm.io/installation) (`npm install -g pnpm`).
 
 Via GitHub CLI:
 
