@@ -1,5 +1,6 @@
-import path from 'node:path'
 import fs from 'node:fs'
+import path from 'node:path'
+
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import {
@@ -76,7 +77,7 @@ describe('Template Plugin E2E', () => {
 
     const pluginLoaded = await page!.evaluate(() => {
       const scripts = Array.from(document.querySelectorAll('script'))
-      return scripts.some(s => s.src?.includes('template'))
+      return scripts.some(s => s.src.includes('template'))
     })
 
     console.log(`Plugin loaded: ${pluginLoaded}`)
@@ -85,7 +86,7 @@ describe('Template Plugin E2E', () => {
 
   it('should render HelloView without crashing', async () => {
     expect(page).toBeDefined()
-    await new Promise(r => setTimeout(r, 2000))
+    await page!.waitForSelector('h1', { timeout: 10_000 })
     await page!.screenshot({ path: screenshot('hello-view-rendered') })
 
     const heading = await page!.$eval(

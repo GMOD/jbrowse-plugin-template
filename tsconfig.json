@@ -4,7 +4,6 @@
     "target": "es2018",
     "module": "esnext",
     "lib": ["dom", "esnext"],
-    "importHelpers": true,
     "declaration": true,
     "sourceMap": true,
     "rootDir": "./src",
@@ -18,7 +17,6 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "noEmit": false,
     "noUncheckedIndexedAccess": true,
     "allowJs": true,
     "resolveJsonModule": true

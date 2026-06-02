@@ -7,19 +7,19 @@ import tseslint from 'typescript-eslint'
 
 export default defineConfig(
   {
-    ignores: ['eslint.config.mjs', 'esbuild.mjs', 'dist/*'],
+    ignores: ['eslint.config.mjs', 'rollup.config.mjs', 'dist/*', 'scripts/*', '.test-jbrowse-*/**'],
   },
   {
     languageOptions: {
       parserOptions: {
-        project: ['./tsconfig.json'],
+        project: ['./tsconfig.eslint.json'],
         tsconfigRootDir: import.meta.dirname,
       },
     },
 
     settings: {
       react: {
-        version: 'detect',
+        version: '19',
       },
     },
   },
@@ -124,6 +124,15 @@ export default defineConfig(
           caughtErrors: 'none',
         },
       ],
+    },
+  },
+  {
+    files: ['test/**'],
+    rules: {
+      'no-console': 'off',
+      // import-x/named can't follow re-exports in @testing-library packages;
+      // TypeScript already catches missing named imports at compile time.
+      'import-x/named': 'off',
     },
   },
 )

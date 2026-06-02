@@ -1,6 +1,5 @@
 import { type ChildProcess, execSync, spawn } from 'node:child_process'
 import fs from 'node:fs'
-import http from 'node:http'
 import path from 'node:path'
 
 import { launch } from 'puppeteer'
@@ -14,36 +13,6 @@ const TEST_JBROWSE_DIR = path.join(
   process.cwd(),
   `.test-jbrowse-${TEST_JBROWSE_VERSION}`,
 )
-
-export async function waitForServer(
-  port: number,
-  pathToCheck = '/',
-  timeout = 30_000,
-) {
-  const start = Date.now()
-  while (Date.now() - start < timeout) {
-    try {
-      await new Promise<void>((resolve, reject) => {
-        const req = http.get(`http://localhost:${port}${pathToCheck}`, res => {
-          if (res.statusCode === 200) {
-            resolve()
-          } else {
-            reject(new Error(`Server returned ${res.statusCode}`))
-          }
-        })
-        req.on('error', reject)
-        req.setTimeout(1000, () => {
-          req.destroy()
-          reject(new Error('Request timeout'))
-        })
-      })
-      return
-    } catch {
-      await new Promise(r => setTimeout(r, 500))
-    }
-  }
-  throw new Error(`Server on port ${port} did not start within ${timeout}ms`)
-}
 
 export function setupJBrowse() {
   console.log('Setting up JBrowse test instance...')

@@ -26,7 +26,7 @@
     "pretest:e2e": "test -d .test-jbrowse-nightly || jbrowse create .test-jbrowse-nightly --nightly",
     "prepack": "pnpm build",
     "preversion": "pnpm lint",
-    "version": "node -e \"console.log('export const version = \\'' + require('./package.json').version + '\\'')\" > src/version.ts && git add src/version.ts",
+    "version": "node scripts/version.mjs",
     "postversion": "git push --follow-tags"
   },
   "devDependencies": {
@@ -69,12 +69,5 @@
     "typescript-eslint": "^8.59.1",
     "vitest": "^4.1.5"
   },
-  "private": true,
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild",
-      "puppeteer",
-      "unrs-resolver"
-    ]
-  }
+  "private": true
 }
