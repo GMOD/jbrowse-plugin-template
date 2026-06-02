@@ -99,7 +99,7 @@ function injectCSS(css: string) {
 injectCSS(`.my-class { color: red }`)
 ```
 
-This avoids needing a specialized CSS loader in either rollup or esbuild.
+This avoids needing a specialized CSS loader in either rollup or esbuild. Other approaches are possible — for example, configuring a rollup/esbuild CSS plugin or emitting a separate `.css` file alongside the bundle.
 
 ## Embedded components
 
