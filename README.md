@@ -119,6 +119,23 @@ const state = createViewState({
 
 See https://jbrowse.org/storybook/lgv/main/?path=/docs/using-plugins--docs for a live example.
 
+## Learn more
+
+The [JBrowse developer guides](https://jbrowse.org/jb2/docs/developer_guide/) cover each pluggable element in depth:
+
+| What you want to add | Guide |
+|---|---|
+| A view (like `src/HelloView` here) | [Creating custom view types](https://jbrowse.org/jb2/docs/developer_guides/creating_view/) |
+| A track / display | [Custom track and display types](https://jbrowse.org/jb2/docs/developer_guides/creating_display/) |
+| A display that plots your own features | [Plotting features in a custom display](https://jbrowse.org/jb2/docs/developer_guides/plotting_features/) |
+| The same at 100K+ features per frame | [GPU displays](https://jbrowse.org/jb2/docs/developer_guides/creating_gpu_display/) |
+| A data adapter | [Creating custom adapters](https://jbrowse.org/jb2/docs/developer_guides/creating_adapter/) |
+| A widget | [Creating custom widgets](https://jbrowse.org/jb2/docs/developer_guides/creating_widget/) |
+
+This template's worked example is a **view**. For a track/display, the two plotting guides above build a complete one, and every code block in them is generated from [`example-plugins/score-example`](https://github.com/GMOD/jbrowse-components/tree/main/example-plugins/score-example) in the main repo, so the code they show is compiled and tested rather than hand-copied.
+
+See [Pluggable elements](https://jbrowse.org/jb2/docs/developer_guides/pluggable_elements/) for the full list of extension types.
+
 ---
 
 See [jbrowse-plugin-esbuild-template](https://github.com/GMOD/jbrowse-plugin-esbuild-template) for an alternative using esbuild instead of rollup.

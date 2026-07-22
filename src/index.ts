@@ -15,7 +15,7 @@ export default class TemplatePlugin extends Plugin {
   name = 'TemplatePlugin'
   version = version
 
-  // install() registers types (views, tracks, adapters, renderers) before any session exists.
+  // install() registers types (views, tracks, adapters, widgets) before any session exists.
   install(pluginManager: PluginManager) {
     pluginManager.addViewType(() => {
       return new ViewType({
